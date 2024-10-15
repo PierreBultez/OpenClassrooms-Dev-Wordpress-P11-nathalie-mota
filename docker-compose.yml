@@ -1,0 +1,41 @@
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: pierre
+      WORDPRESS_DB_PASSWORD: 260514
+      WORDPRESS_DB_NAME: nathaliemota
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+      - ./config/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: nathaliemota
+      MYSQL_USER: pierre
+      MYSQL_PASSWORD: 260514
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    platform: linux/arm64/v8  # Spécifier la plateforme pour les puces Apple Silicon
+    ports:
+      - "8080:80"  # Expose PHPMyAdmin sur le port 8080 de votre machine locale
+    environment:
+      PMA_HOST: db  # Le nom de votre service MySQL dans Docker Compose
+      PMA_USER: pierre  # Le nom d'utilisateur pour accéder à MySQL
+      PMA_PASSWORD: 260514  # Le mot de passe pour accéder à MySQL
+    depends_on:
+      - db  # Assurez-vous que PHPMyAdmin ne démarre qu'après le démarrage de MySQL
+
+volumes:
+  db_data:
