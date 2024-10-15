@@ -9,7 +9,7 @@ services:
       WORDPRESS_DB_PASSWORD: 260514
       WORDPRESS_DB_NAME: nathaliemota
     volumes:
-      - ./wp-content:/var/www/html/wp-content
+      - ./nathalie_mota:/var/www/html
       - ./config/php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - db
