@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang=fr>
 <head>
     <meta charset="UTF-8">
@@ -15,6 +15,9 @@
     <div class="logo">
         <img src="<?php echo get_stylesheet_directory_uri() . '/assets/logo/nathalie_mota_logo.png'; ?>" alt="Logo Nathalie Mota">
     </div>
+    <button class="burger-menu" aria-label="Menu" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+    </button>
     <div class="menu">
         <ul class="menu-entry">
             <li><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><h3>Accueil</h3></a></li>

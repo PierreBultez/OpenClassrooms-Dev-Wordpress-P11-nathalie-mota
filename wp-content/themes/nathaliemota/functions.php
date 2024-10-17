@@ -13,6 +13,12 @@ function nathaliemota_register_assets () {
     wp_enqueue_script('bootstrap');
     wp_register_style('nathaliemota', get_stylesheet_directory_uri() . '/style.css');
     wp_enqueue_style('nathaliemota');
+    wp_register_style('fontawesome', get_stylesheet_directory_uri() . '/assets/fontawesome/css/fontawesome.css');
+    wp_register_style('fontawesome-all', get_stylesheet_directory_uri() . '/assets/fontawesome/css/all.css');
+    wp_enqueue_style('fontawesome');
+    wp_enqueue_style('fontawesome-all');
+    wp_register_script('nathaliemota-scripts', get_stylesheet_directory_uri() . '/scripts/scripts.js', [], false, true);
+    wp_enqueue_script('nathaliemota-scripts');
 }
 
 add_action ('after_setup_theme', 'nathaliemota_setup');
