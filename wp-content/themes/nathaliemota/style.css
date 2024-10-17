@@ -149,3 +149,29 @@ header {
     -webkit-text-stroke: 3px var(--full-white);
     color: transparent;
 }
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+    padding: 0;
+    gap: 80px;
+}
+
+.footer-links li {
+    list-style-type: none;
+}
+
+.footer-links li a {
+    text-decoration: none;
+}
