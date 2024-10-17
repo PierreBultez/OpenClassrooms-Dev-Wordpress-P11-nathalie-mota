@@ -33,7 +33,7 @@ body {
 
 h1 {
     font-family: "Space Mono", monospace;
-    font-size: 96px;
+    font-size: 6rem;
     font-weight: 700;
     font-style: italic;
     text-transform: uppercase;
@@ -43,10 +43,10 @@ h1 {
 
 h2 {
     font-family: "Space Mono", monospace;
-    font-size: 66px;
+    font-size: 4.125rem;
     font-weight: 400;
     font-style: italic;
-    line-height: 58px;
+    line-height: 3.625rem;
     text-transform: uppercase;
     color: var(--full-black);
     margin-bottom: 0;
@@ -54,7 +54,7 @@ h2 {
 
 h3 {
     font-family: "Space Mono", monospace;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 400;
     font-style: normal;
     letter-spacing: 0.1em;
@@ -65,7 +65,7 @@ h3 {
 
 p {
     font-family: "Poppins", sans-serif;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 300;
     font-style: normal;
     color: var(--full-black);
@@ -74,7 +74,7 @@ p {
 
 .description-photo {
     font-family: "Space Mono", monospace;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 400;
     font-style: normal;
     letter-spacing: 0.1em;
@@ -126,6 +126,7 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    width: 100%;
 }
 
 .hero {
@@ -135,9 +136,9 @@ header {
 }
 
 .hero img {
-    width: 100%;
+    max-width: 100%;
     height: auto;
-    display: block;
+    object-fit: contain;
 }
 
 .hero-title {
@@ -178,22 +179,30 @@ footer {
 
 /* Smartphones en portrait (max-width 576px) */
 @media (max-width: 576px) {
+    body {
+        max-width: 576px;
+    }
+
+    h1 {
+        font-size: 2.875rem;
+    }
+
+    h2 {
+        font-size: 2.875rem;
+        line-height: 3rem;
+    }
+
+    .hero-title {
+        -webkit-text-stroke: 0.8px var(--full-white);
+    }
+
     footer {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
         height: 210px;
     }
 
     .footer-links {
-        display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: flex-start;
-        flex-wrap: nowrap;
-        margin-bottom: 0;
-        padding: 0;
         gap: 24px;
     }
 }
