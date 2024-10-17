@@ -20,6 +20,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
     --full-red: #E00000;
     --medium-red: #FE5858;
     --light-red: #FFD6D6;
+    --full-white: #ffffff;
 }
 
 body {
@@ -125,4 +126,26 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+}
+
+.hero {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.hero-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    -webkit-text-stroke: 3px var(--full-white);
+    color: transparent;
 }
