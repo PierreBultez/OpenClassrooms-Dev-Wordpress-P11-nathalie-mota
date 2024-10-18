@@ -131,6 +131,115 @@ header {
     cursor: pointer;
 }
 
+/* ************************************************************************************ */
+
+/* Styles de base pour l'overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+}
+
+/* La boîte modale */
+.modal-content {
+    background-color: var(--full-white);
+    width: 90%;
+    max-width: 600px;
+    max-height: 100vh;
+    border: 5px solid var(--full-black);
+    position: relative;
+    padding: 20px 0;
+}
+
+.contact {
+    margin-bottom: 46px;
+    overflow: hidden;
+}
+
+/* Le formulaire */
+.form-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+}
+
+.column-container {
+    width: 100%;
+}
+
+.col-1 {
+    width: 100%;
+}
+
+.col-2 {
+    width: 100%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form label {
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--full-black);
+}
+
+form input, form textarea {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid var(--medium-grey);
+    border-radius: 8px;
+}
+
+form input[type="text"], form input[type="email"], form textarea {
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--full-black);
+}
+
+/* Le bouton envoyer */
+.btn-submit {
+    background-color: var(--medium-grey);
+    border-radius: 2px;
+    border-style: none;
+    padding: 10px;
+    width: 100%;
+}
+
+.btn-submit:hover {
+    background-color: var(--full-black);
+    color: var(--full-white);
+}
+
+/* Animation pour afficher la modale */
+.modal-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ******************************************************************* */
+
 .main {
     display: flex;
     flex-direction: column;
@@ -260,6 +369,10 @@ footer {
         font-size: 2.75rem;
     }
 
+    form input, form textarea {
+        border-radius: 2px;
+    }
+
     .hero-title {
         -webkit-text-stroke: 0.8px var(--full-white);
     }
@@ -347,6 +460,38 @@ footer {
         font-size: 2.75rem;
     }
 
+    .contact {
+        margin-bottom: 10px;
+    }
+
+    .form-container {
+        width: 80%;
+    }
+
+    .column-container {
+        display: flex;
+        flex-direction: row;
+        gap: 20px; /* Espace entre les colonnes */
+    }
+
+    .col-1, .col-2 {
+        width: 48%;
+    }
+
+    form label {
+        margin-bottom: 4px;
+    }
+
+    form input, form textarea {
+        margin-bottom: 5px;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .btn-submit {
+        padding: 7px;
+    }
+
     .hero-title {
         -webkit-text-stroke: 1.2px var(--full-white);
     }
@@ -389,6 +534,24 @@ footer {
         padding-right: 80px;
     }
 
+    .contact {
+        margin-bottom: 20px;
+    }
+
+    form label {
+        margin-bottom: 4px;
+    }
+
+    form input, form textarea {
+        margin-bottom: 5px;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .btn-submit {
+        padding: 7px;
+    }
+
     .hero-title {
         -webkit-text-stroke: 2.2px var(--full-white);
     }
@@ -407,6 +570,19 @@ footer {
     h2 {
         font-size: 2.875rem;
         line-height: 3rem;
+    }
+
+    .contact {
+        margin-bottom: 36px;
+    }
+
+    form label {
+        margin-bottom: 6px;
+    }
+
+    form input, form textarea {
+        margin-bottom: 10px;
+        border-radius: 6px;
     }
 
     .hero-title {
