@@ -37,10 +37,10 @@
                         <div class="column-container">
                             <div class="col-1">
                                 <label for="name">Nom</label>
-                                <input type="text" id="name" name="name" required>
+                                <input type="text" id="name" name="name" autocomplete="name" required>
 
                                 <label for="email">E-mail</label>
-                                <input type="email" id="email" name="email" required>
+                                <input type="email" id="email" name="email" autocomplete="email" required>
 
                                 <label for="photo-ref">Réf. Photo</label>
                                 <input type="text" id="photo-ref" name="photo-ref">
