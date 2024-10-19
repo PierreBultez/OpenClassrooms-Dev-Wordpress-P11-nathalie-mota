@@ -63,6 +63,7 @@ function nathaliemota_setup () {
         'main_menu' => __( 'Menu principal', '' ),
         'footer_menu'  => __( 'Menu de footer', '' ),
     ) );
+    add_image_size( 'photo-detail', 844, 844, false );
 }
 
 function nathaliemota_register_assets () {

@@ -313,6 +313,29 @@ footer {
     margin-bottom: 0;
 }
 
+.detail-photo {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 144px;
+}
+
+.detail-photo-col-1 {
+    width: 48%;
+}
+
+.detail-photo-col-2 {
+    width: 48%;
+}
+
+.detail-photo-col-2 img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
 /* Smartphones en portrait (max-width 576px) */
 @media (max-width: 576px) {
     body {
