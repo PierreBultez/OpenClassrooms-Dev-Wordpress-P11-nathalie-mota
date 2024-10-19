@@ -1,5 +1,61 @@
 <?php
 
+function nathaliemota_init () {
+    register_taxonomy('evenement', 'photographies', array(
+        'hierarchical'  => true,
+        'labels'        => array(
+            'name'          => __('Événements'),
+            'singular_name' => __('Événement'),
+            'plural_name'   => __('Événements'),
+            'search_items'  => __('Rechercher un événement'),
+            'all_items'     => __('Tous les événements'),
+            'edit_item'     => __('Editer l\'événement'),
+            'update_item'   => __('Mettre à jour l\'événement'),
+            'add_new_item'  => __('Ajouter un nouvel événement'),
+            'new_item_name' => __('Nouvel événement'),
+            'menu_name'     => __('Événements'),
+        ),
+        'show_in_rest'  => true,
+        'show_admin_column' => true,
+    ));
+    register_taxonomy('format', 'photographies', array(
+        'hierarchical'  => true,
+        'labels'        => array(
+            'name'          => __('Format de photo'),
+            'singular_name' => __('Format de photo'),
+            'plural_name'   => __('Formats de photo'),
+            'search_items'  => __('Rechercher un format de photo'),
+            'all_items'     => __('Tous les formats de photo'),
+            'edit_item'     => __('Editer le format de photo'),
+            'update_item'   => __('Mettre à jour le format de photo'),
+            'add_new_item'  => __('Ajouter un nouveau format de photo'),
+            'new_item_name' => __('Nouveau format de photo'),
+            'menu_name'     => __('Formats de photo'),
+        ),
+        'show_in_rest'  => true,
+        'show_admin_column' => true,
+    ));
+    register_post_type('photographies', array(
+        'labels'        => array(
+            'name'          => __('Photographies'),
+            'singular_name' => __('Photographie'),
+            'plural_name'   => __('Photographies'),
+            'search_items'  => __('Rechercher une photographie'),
+            'all_items'     => __('Toutes les photographies'),
+            'edit_item'     => __('Editer une photographie'),
+            'update_item'   => __('Mettre à jour la photographie'),
+            'add_new'       => __('Ajouter une nouvelle photographie'),
+            'add_new_item'  => __('Ajouter une nouvelle photographie'),
+            'new_item_name' => __('Nouvelle photographie'),
+            'menu_name'     => __('Photographies'),
+            'not_found'     => __('Aucune photographie trouvée'),
+        ),
+        'public'        => true,
+        'menu_icon'     => 'dashicons-camera',
+        'menu_position' => 3,
+    ));
+}
+
 function nathaliemota_setup () {
     add_theme_support('title-tag');
     // add_theme_support('menus'); ***** Pas besoin avec register_nav_menus() *****
@@ -25,5 +81,6 @@ function nathaliemota_register_assets () {
     wp_enqueue_script('nathaliemota-scripts');
 }
 
+add_action('init', 'nathaliemota_init');
 add_action ('after_setup_theme', 'nathaliemota_setup');
 add_action('wp_enqueue_scripts', 'nathaliemota_register_assets');

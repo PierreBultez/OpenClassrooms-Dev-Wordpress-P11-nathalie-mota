@@ -7,7 +7,7 @@
 get_header(); // Inclut le fichier header.php du thème
 ?>
 
-    <div class="container">
+<div class="container">
     <div class="content">
         <?php
         // La boucle WordPress pour les articles
@@ -49,3 +49,10 @@ get_header(); // Inclut le fichier header.php du thème
     </div>
 
     <div class="sidebar">
+        <?php get_sidebar(); ?> <!-- Inclut le fichier sidebar.php, s'il existe -->
+    </div>
+</div>
+
+<?php
+get_footer(); // Inclut le fichier footer.php du thème
+?>
