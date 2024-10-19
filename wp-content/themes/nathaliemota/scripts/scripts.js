@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     contactLink.addEventListener('click', function(e) {
+        console.log('clicked');
         e.preventDefault(); // Empêche le comportement par défaut du lien
         modal.classList.add('active'); // Ajoute la classe active pour afficher la modale
     });

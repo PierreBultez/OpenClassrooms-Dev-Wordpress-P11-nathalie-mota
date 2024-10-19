@@ -1,11 +1,11 @@
 <footer>
-    <ul class="footer-links">
-        <li><a href="#"><h3>Mentions légales</h3></a></li>
-        <li><a href="#"><h3>Vie privée</h3></a></li>
-        <li><h3>Tous droits réservés</h3></li>
-    </ul>
+    <?php wp_nav_menu( array(
+        'theme_location' => 'footer_menu',
+        'menu_class' => 'footer-links',
+        'container' => 'null',
+    ) );
+    ?>
 </footer>
-
+<?php wp_footer(); ?>
 </body>
 </html>
-<?php wp_footer(); ?>

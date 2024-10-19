@@ -2,7 +2,11 @@
 
 function nathaliemota_setup () {
     add_theme_support('title-tag');
-    add_theme_support('menus');
+    // add_theme_support('menus'); ***** Pas besoin avec register_nav_menus() *****
+    register_nav_menus( array(
+        'main_menu' => __( 'Menu principal', '' ),
+        'footer_menu'  => __( 'Menu de footer', '' ),
+    ) );
 }
 
 function nathaliemota_register_assets () {
@@ -23,5 +27,3 @@ function nathaliemota_register_assets () {
 
 add_action ('after_setup_theme', 'nathaliemota_setup');
 add_action('wp_enqueue_scripts', 'nathaliemota_register_assets');
-
-?>

@@ -13,18 +13,17 @@
 <body>
 <header>
     <div class="logo">
-        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/logo/nathalie_mota_logo.png'; ?>" alt="Logo Nathalie Mota">
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/logo/nathalie_mota_logo.png'; ?>" alt="Logo Nathalie Mota"></a>
     </div>
     <button class="burger-menu" aria-label="Menu" aria-expanded="false">
         <i class="fa-solid fa-bars"></i>
     </button>
-    <div class="menu">
-        <ul class="menu-entry">
-            <li><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><h3>Accueil</h3></a></li>
-            <li><a href="#"><h3>À propos</h3></a></li>
-            <li><a href="#contact"><h3>Contact</h3></a></li>
-        </ul>
-    </div>
+    <?php wp_nav_menu( array(
+        'theme_location' => 'main_menu',
+        'menu_class' => 'menu-entry',
+        'container_class' => 'menu',
+        ) );
+    ?>
     <!-- Modale de contact -->
     <div class="modal-overlay" id="contactModal">
         <div class="modal-content">
@@ -52,9 +51,6 @@
                                 <button type="submit" class="btn-submit">Envoyer</button>
                             </div>
                         </div>
-
-
-
                     </form>
                 </div>
             </div>
