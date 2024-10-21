@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const prevArrow = $('#prevArrow');
         const nextArrow = $('#nextArrow');
 
+        const currentPostID = ajax_object.post_id; // Récupérer l'ID du post actuel depuis les données localisées
+
         // Survol de la flèche gauche (photo précédente)
         prevArrow.on('mouseenter', function() {
             $.ajax({
@@ -54,11 +56,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 type: 'POST',
                 data: {
                     action: 'get_previous_photo', // Action définie dans functions.php
-                    security: ajax_object.security // Nonce pour la sécurité
+                    security: ajax_object.security, // Nonce pour la sécurité
+                    post_id: currentPostID // Passer l'ID du post actuel
                 },
                 success: function(response) {
                     if (response.success && response.data) {
-                        console.log('URL de l\'image:', response.data); // Vérifier l'URL de l'image
                         previewImg.attr('src', response.data).show(); // Afficher l'image
                     }
                 }
@@ -77,7 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 type: 'POST',
                 data: {
                     action: 'get_next_photo',
-                    security: ajax_object.security
+                    security: ajax_object.security,
+                    post_id: currentPostID // Passer l'ID du post actuel
                 },
                 success: function(response) {
                     if (response.success && response.data) {
