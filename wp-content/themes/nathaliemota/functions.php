@@ -78,10 +78,65 @@ function nathaliemota_register_assets () {
     wp_register_style('fontawesome-all', get_stylesheet_directory_uri() . '/assets/fontawesome/css/all.css');
     wp_enqueue_style('fontawesome');
     wp_enqueue_style('fontawesome-all');
-    wp_register_script('nathaliemota-scripts', get_stylesheet_directory_uri() . '/scripts/scripts.js', [], false, true);
+    wp_register_script('nathaliemota-scripts', get_stylesheet_directory_uri() . '/scripts/scripts.js', ['jquery'], false, true);
     wp_enqueue_script('nathaliemota-scripts');
+    // Localiser le script pour passer l'URL d'admin AJAX et le nonce de sécurité
+    wp_localize_script('nathaliemota-scripts', 'ajax_object', array(
+        'ajax_url' => admin_url('admin-ajax.php'),  // URL pour les requêtes AJAX
+        'security' => wp_create_nonce('photo_navigation_nonce') // Nonce de sécurité
+    ));
+}
+
+// Action pour récupérer la photo précédente
+function get_previous_photo_ajax() {
+    // Vérifier le nonce pour la sécurité
+    check_ajax_referer( 'photo_navigation_nonce', 'security' );
+
+    $previous_post = get_previous_post( true, '', '' );
+    $previous_image_url = '';
+        error_log($previous_post);
+    if ( $previous_post ) {
+        error_log('ID du post précédent : ' . $previous_post->ID); // Log l'ID de la photo précédente
+        $attachments = get_attached_media( 'image', $previous_post->ID );
+        if ( !empty( $attachments ) ) {
+            $attachment = array_shift( $attachments );
+            error_log('Image ID trouvée : ' . $attachment->ID); // Log l'ID de l'image trouvée
+            $previous_image_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' )[0];
+        }
+    }
+    else {
+        error_log('Pas de previous post');
+    }
+
+    // Retourner l'URL de l'image
+    wp_send_json_success( $previous_image_url );
+}
+
+// Action pour récupérer la photo suivante
+function get_next_photo_ajax() {
+    // Vérifier le nonce pour la sécurité
+    check_ajax_referer( 'photo_navigation_nonce', 'security' );
+
+    $next_post = get_next_post( true, '', 'evenement' );
+    $next_image_url = '';
+
+    if ( $next_post ) {
+        $attachments = get_attached_media( 'image', $next_post->ID );
+        if ( !empty( $attachments ) ) {
+            $attachment = array_shift( $attachments );
+            $next_image_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' )[0];
+        }
+    }
+
+    // Retourner l'URL de l'image
+    wp_send_json_success( $next_image_url );
 }
 
 add_action('init', 'nathaliemota_init');
 add_action ('after_setup_theme', 'nathaliemota_setup');
 add_action('wp_enqueue_scripts', 'nathaliemota_register_assets');
+// Enregistrer les actions AJAX pour les utilisateurs connectés et non connectés
+add_action( 'wp_ajax_get_previous_photo', 'get_previous_photo_ajax' );
+add_action( 'wp_ajax_nopriv_get_previous_photo', 'get_previous_photo_ajax' );
+add_action( 'wp_ajax_get_next_photo', 'get_next_photo_ajax' );
+add_action( 'wp_ajax_nopriv_get_next_photo', 'get_next_photo_ajax' );

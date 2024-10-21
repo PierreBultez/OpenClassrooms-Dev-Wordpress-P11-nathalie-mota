@@ -97,7 +97,20 @@ get_header(); // Inclut le fichier header.php du thème
             <button type="button" class="btn-submit" id=contactBtn>Contact</button>
         </div>
         <div class="detail-photo-bottom-next-prev">
-             <button type="button" class="btn-submit">Contact</button>
+            <!-- Emplacement pour la miniature -->
+            <div class="photo-preview">
+                <img id="previewImg" src="" alt="Prévisualisation">
+            </div>
+
+            <!-- Flèche gauche pour la photo précédente -->
+            <div class="previous-photo">
+                <i class="fa-solid fa-arrow-left-long" id="prevArrow"></i>
+            </div>
+
+            <!-- Flèche droite pour la photo suivante -->
+            <div class="next-photo">
+                <i class="fa-solid fa-arrow-right-long" id="nextArrow"></i>
+            </div>
         </div>
     </div>
 </div>

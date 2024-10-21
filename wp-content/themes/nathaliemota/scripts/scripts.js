@@ -41,4 +41,55 @@ document.addEventListener('DOMContentLoaded', function() {
             modalPhoto.classList.remove('active'); // Fermer la modale
         }
     });
+
+    jQuery(document).ready(function($) {
+        const previewImg = $('#previewImg');
+        const prevArrow = $('#prevArrow');
+        const nextArrow = $('#nextArrow');
+
+        // Survol de la flèche gauche (photo précédente)
+        prevArrow.on('mouseenter', function() {
+            $.ajax({
+                url: ajax_object.ajax_url, // URL pour l'appel AJAX
+                type: 'POST',
+                data: {
+                    action: 'get_previous_photo', // Action définie dans functions.php
+                    security: ajax_object.security // Nonce pour la sécurité
+                },
+                success: function(response) {
+                    if (response.success && response.data) {
+                        console.log('URL de l\'image:', response.data); // Vérifier l'URL de l'image
+                        previewImg.attr('src', response.data).show(); // Afficher l'image
+                    }
+                }
+            });
+        });
+
+        // Quitter la flèche gauche
+        prevArrow.on('mouseleave', function() {
+            previewImg.hide(); // Masquer l'image au survol
+        });
+
+        // Survol de la flèche droite (photo suivante)
+        nextArrow.on('mouseenter', function() {
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'get_next_photo',
+                    security: ajax_object.security
+                },
+                success: function(response) {
+                    if (response.success && response.data) {
+                        previewImg.attr('src', response.data).show(); // Afficher l'image
+                    }
+                }
+            });
+        });
+
+        // Quitter la flèche droite
+        nextArrow.on('mouseleave', function() {
+            previewImg.hide(); // Masquer l'image au survol
+        });
+    });
 });
