@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const icon = burger.querySelector('i');
     const modal = document.getElementById('contactModal');
     const contactLink = document.querySelector('a[href="#contact"]');
+    const modalPhoto = document.getElementById('contactModalPhoto');
+    const contactBtn = document.getElementById('contactBtn');
 
     burger.addEventListener('click', function() {
         menu.classList.toggle('active');
@@ -26,6 +28,17 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.addEventListener('click', function(e) {
         if (e.target === modal) { // Si le clic est sur l'overlay (en dehors de la boîte)
             modal.classList.remove('active'); // Fermer la modale
+        }
+    });
+
+    contactBtn.addEventListener('click', function(e) {
+        console.log('clicked');
+        e.preventDefault(); // Empêche le comportement par défaut du lien
+        modalPhoto.classList.add('active'); // Ajoute la classe active pour afficher la modale
+    });
+    modalPhoto.addEventListener('click', function(e) {
+        if (e.target === modalPhoto) { // Si le clic est sur l'overlay (en dehors de la boîte)
+            modalPhoto.classList.remove('active'); // Fermer la modale
         }
     });
 });
