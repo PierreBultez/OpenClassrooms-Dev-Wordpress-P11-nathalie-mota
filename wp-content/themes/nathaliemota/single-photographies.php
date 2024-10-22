@@ -97,19 +97,22 @@ get_header(); // Inclut le fichier header.php du thème
             <button type="button" class="btn-submit" id=contactBtn>Contact</button>
         </div>
         <div class="detail-photo-bottom-next-prev">
-            <!-- Emplacement pour la miniature -->
-            <div class="photo-preview">
-                <img id="previewImg" src="" alt="Prévisualisation">
-            </div>
-
-            <!-- Flèche gauche pour la photo précédente -->
-            <div class="previous-photo">
-                <i class="fa-solid fa-arrow-left-long" id="prevArrow"></i>
-            </div>
-
-            <!-- Flèche droite pour la photo suivante -->
-            <div class="next-photo">
-                <i class="fa-solid fa-arrow-right-long" id="nextArrow"></i>
+            <div class="next-prev-nav">
+                <div class="photo-preview">
+                    <img id="previewImg" src="<?php echo get_stylesheet_directory_uri() . '/assets/images/nathalie-0-80x80.jpeg'; ?>" alt="Preview image" style="opacity: 0;">
+                </div>
+                <div class="next-prev-arrows">
+                    <div class="previous-photo">
+                        <a id="prevArrow" href="#">
+                            <i class="fa-solid fa-arrow-left-long"></i>
+                        </a>
+                    </div>
+                    <div class="next-photo">
+                        <a id="nextArrow" href="#">
+                            <i class="fa-solid fa-arrow-right-long"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

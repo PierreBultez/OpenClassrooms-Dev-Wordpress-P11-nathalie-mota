@@ -64,6 +64,7 @@ function nathaliemota_setup () {
         'footer_menu'  => __( 'Menu de footer', '' ),
     ) );
     add_image_size( 'photo-detail', 844, 844, false );
+    add_image_size( 'photo-detail-thumb', 80, 80, true );
 }
 
 function nathaliemota_register_assets () {
@@ -126,17 +127,21 @@ function get_previous_photo_ajax() {
     $previous_query = new WP_Query($args);
 
     $previous_image_url = '';
+    $previous_post_url = '';
 
     if ( $previous_query->have_posts() ) {
         while ( $previous_query->have_posts() ) {
             $previous_query->the_post();
             $previous_post_id = get_the_ID();
+            // Récupérer l'URL du post
+            $previous_post_url = get_permalink($previous_post_id);
 
             // Récupérer l'image attachée
             $attachments = get_attached_media( 'image', $previous_post_id );
             if ( !empty( $attachments ) ) {
                 $attachment = array_shift( $attachments );
-                $previous_image_url = wp_get_attachment_image_src( $attachment->ID, 'thumbnail' )[0];
+                $previous_image_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail-thumb' )[0];
+                error_log('URL de l\'image précédente trouvée : ' . $previous_image_url); // Log pour vérifier
             } else {
                 error_log('Aucune image attachée trouvée pour ce post.');
             }
@@ -149,7 +154,7 @@ function get_previous_photo_ajax() {
 
     // Retourner l'URL de l'image
     if ( !empty( $previous_image_url ) ) {
-        wp_send_json_success( $previous_image_url );
+        wp_send_json_success( array( 'image_url' => $previous_image_url, 'post_url' => $previous_post_url ) );
     } else {
         wp_send_json_error( 'Aucune image trouvée pour la photo précédente.' );
     }
@@ -191,17 +196,21 @@ function get_next_photo_ajax() {
     $next_query = new WP_Query($args);
 
     $next_image_url = '';
+    $next_post_url = '';
 
     if ( $next_query->have_posts() ) {
         while ( $next_query->have_posts() ) {
             $next_query->the_post();
             $next_post_id = get_the_ID();
+            // Récupérer l'URL du post
+            $next_post_url = get_permalink($next_post_id);
 
             // Récupérer l'image attachée
             $attachments = get_attached_media( 'image', $next_post_id );
             if ( !empty( $attachments ) ) {
                 $attachment = array_shift( $attachments );
-                $next_image_url = wp_get_attachment_image_src( $attachment->ID, 'thumbnail' )[0];
+                $next_image_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail-thumb' )[0];
+                error_log('URL de l\'image suivante trouvée : ' . $next_image_url); // Log pour vérifier
             } else {
                 error_log('Aucune image attachée trouvée pour ce post.');
             }
@@ -214,7 +223,7 @@ function get_next_photo_ajax() {
 
     // Retourner l'URL de l'image
     if ( !empty( $next_image_url ) ) {
-        wp_send_json_success( $next_image_url );
+        wp_send_json_success( array( 'image_url' => $next_image_url, 'post_url' => $next_post_url ) );
     } else {
         wp_send_json_error( 'Aucune image trouvée pour la photo suivante.' );
     }

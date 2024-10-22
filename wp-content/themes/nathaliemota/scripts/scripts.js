@@ -47,7 +47,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const prevArrow = $('#prevArrow');
         const nextArrow = $('#nextArrow');
 
+        // Définir l'URL de l'image par défaut
+        const defaultImageUrl = previewImg.attr('src'); // Récupérer l'URL de l'image par défaut
+
         const currentPostID = ajax_object.post_id; // Récupérer l'ID du post actuel depuis les données localisées
+
+        // Fonction pour afficher l'image et mettre à jour le lien de la flèche
+        function showImage(url, postUrl, arrowElement) {
+            console.log('URL reçue:', url);
+            if (url !== defaultImageUrl) {
+                previewImg.attr('src', url).css('opacity', 1);
+                arrowElement.attr('href', postUrl); // Mettre à jour le lien de la flèche
+            } else {
+                console.warn('L\'URL reçue est identique à l\'image par défaut.');
+            }
+        }
+
+        // Fonction pour masquer l'image
+        function hideImage() {
+            previewImg.css('opacity', 0); // Masque l'image en ajustant son opacité
+        }
 
         // Survol de la flèche gauche (photo précédente)
         prevArrow.on('mouseenter', function() {
@@ -60,16 +79,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     post_id: currentPostID // Passer l'ID du post actuel
                 },
                 success: function(response) {
-                    if (response.success && response.data) {
-                        previewImg.attr('src', response.data).show(); // Afficher l'image
+                    if (response.success) {
+                        showImage(response.data.image_url, response.data.post_url, prevArrow); // Afficher l'image précédente et mettre à jour le lien
+                    } else {
+                        console.error('Erreur :', response.data.message); // Afficher une erreur si nécessaire
                     }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur AJAX:', textStatus, errorThrown); // Afficher une erreur AJAX si nécessaire
                 }
             });
-        });
-
-        // Quitter la flèche gauche
-        prevArrow.on('mouseleave', function() {
-            previewImg.hide(); // Masquer l'image au survol
         });
 
         // Survol de la flèche droite (photo suivante)
@@ -83,16 +102,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     post_id: currentPostID // Passer l'ID du post actuel
                 },
                 success: function(response) {
-                    if (response.success && response.data) {
-                        previewImg.attr('src', response.data).show(); // Afficher l'image
+                    if (response.success) {
+                        showImage(response.data.image_url, response.data.post_url, nextArrow); // Afficher l'image suivante et mettre à jour le lien
+                    } else {
+                        console.error('Erreur :', response.data.message); // Afficher une erreur si nécessaire
                     }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur AJAX:', textStatus, errorThrown); // Afficher une erreur AJAX si nécessaire
                 }
             });
         });
-
-        // Quitter la flèche droite
-        nextArrow.on('mouseleave', function() {
-            previewImg.hide(); // Masquer l'image au survol
-        });
+    // Masquer l'image lorsque la souris quitte les flèches
+    prevArrow.on('mouseleave', hideImage);
+    nextArrow.on('mouseleave', hideImage);
     });
 });
