@@ -131,7 +131,7 @@ get_header(); // Inclut le fichier header.php du thème
         // Requête pour récupérer deux autres photos de la même catégorie (taxonomie "evenement")
         $args = array(
             'post_type'      => 'photographies',
-            'posts_per_page' => 2,
+            'posts_per_page' =>2,
             'post__not_in'   => array( get_the_ID() ), // Exclure la photo actuelle
             'tax_query'      => array(
                 array(

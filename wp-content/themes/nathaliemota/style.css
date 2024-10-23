@@ -279,6 +279,34 @@ form input[type="text"], form input[type="email"], form textarea {
     color: transparent;
 }
 
+.image-bloc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    padding: 30px 144px;
+    max-width: 1440px;
+}
+
+.image-bloc img {
+    object-fit: cover;
+    aspect-ratio: 1;
+    width: 100%;
+    height: auto;
+}
+
+.image-bloc-btn {
+    width: 100%;
+    border-bottom: 1px solid var(--full-black);
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-bloc-btn button {
+    width: 20%;
+}
+
 footer {
     display: flex;
     align-items: center;

@@ -20,27 +20,35 @@ document.addEventListener('DOMContentLoaded', function() {
         burger.setAttribute('aria-expanded', !isExpanded);
     });
 
-    contactLink.addEventListener('click', function(e) {
-        console.log('clicked');
-        e.preventDefault(); // Empêche le comportement par défaut du lien
-        modal.classList.add('active'); // Ajoute la classe active pour afficher la modale
-    });
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) { // Si le clic est sur l'overlay (en dehors de la boîte)
-            modal.classList.remove('active'); // Fermer la modale
-        }
-    });
+    if (contactLink && modal) {
+        // Ajouter l'écouteur d'événement seulement si le lien et la modale existent
+        contactLink.addEventListener('click', function(e) {
+            console.log('clicked');
+            e.preventDefault(); // Empêche le comportement par défaut du lien
+            modal.classList.add('active'); // Ajoute la classe active pour afficher la modale
+        });
 
-    contactBtn.addEventListener('click', function(e) {
-        console.log('clicked');
-        e.preventDefault(); // Empêche le comportement par défaut du lien
-        modalPhoto.classList.add('active'); // Ajoute la classe active pour afficher la modale
-    });
-    modalPhoto.addEventListener('click', function(e) {
-        if (e.target === modalPhoto) { // Si le clic est sur l'overlay (en dehors de la boîte)
-            modalPhoto.classList.remove('active'); // Fermer la modale
-        }
-    });
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) { // Si le clic est sur l'overlay (en dehors de la boîte)
+                modal.classList.remove('active'); // Fermer la modale
+            }
+        });
+    }
+
+    if (contactBtn && modalPhoto) {
+        // Ajouter l'écouteur d'événement seulement si le bouton et la modale existent
+        contactBtn.addEventListener('click', function(e) {
+            console.log('clicked');
+            e.preventDefault(); // Empêche le comportement par défaut du lien
+            modalPhoto.classList.add('active'); // Ajoute la classe active pour afficher la modale
+        });
+
+        modalPhoto.addEventListener('click', function(e) {
+            if (e.target === modalPhoto) { // Si le clic est sur l'overlay (en dehors de la boîte)
+                modalPhoto.classList.remove('active'); // Fermer la modale
+            }
+        });
+    }
 
     jQuery(document).ready(function($) {
         const previewImg = $('#previewImg');
@@ -117,4 +125,42 @@ document.addEventListener('DOMContentLoaded', function() {
     prevArrow.on('mouseleave', hideImage);
     nextArrow.on('mouseleave', hideImage);
     });
+
+    jQuery(document).ready(function($) {
+        let paged = 2; // Commencer à la page 2 car la page 1 est déjà affichée
+
+        $('#loadMoreBtn').on('click', function(e) {
+            console.log('clicked');
+            e.preventDefault();
+
+            // Cacher le bouton pendant le chargement
+            let $button = $(this);
+            $button.text('Chargement...');
+
+            $.ajax({
+                url: ajax_object.ajax_url, // URL de l'admin-ajax.php
+                type: 'POST',
+                data: {
+                    action: 'load_more_photos', // Action définie dans functions.php
+                    security: ajax_object.security, // Nonce pour la sécurité
+                    paged: paged, // Page actuelle pour la pagination
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('.image-bloc').append(response.data); // Ajouter les nouvelles photos
+                        $button.text('Afficher plus'); // Remettre le texte du bouton
+                        paged++; // Incrémenter pour charger la page suivante
+                    } else {
+                        $button.text('Aucune photo supplémentaire').prop('disabled', true); // Désactiver le bouton
+                        alert('Aucune photo supplémentaire');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Erreur AJAX : ' + textStatus);
+                    $('#loadMoreBtn').text('Erreur, réessayez');
+                }
+            });
+        });
+    });
+
 });

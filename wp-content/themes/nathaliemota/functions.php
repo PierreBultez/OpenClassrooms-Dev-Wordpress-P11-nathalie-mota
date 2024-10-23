@@ -229,6 +229,50 @@ function get_next_photo_ajax() {
     }
 }
 
+function load_more_photos() {
+    // Vérification de la requête AJAX
+    check_ajax_referer( 'load_more_nonce', 'security' );
+
+    $paged = isset( $_POST['paged'] ) ? intval( $_POST['paged'] ) : 1;
+
+    // Arguments de la requête WP_Query
+    $args = array(
+        'post_type'      => 'photographies',
+        'posts_per_page' => 8,
+        'paged'          => $paged, // Pagination, change avec chaque clic sur le bouton
+        'post_status'    => 'publish',
+    );
+
+    $photo_query = new WP_Query( $args );
+
+    // Si des posts sont trouvés
+    if ( $photo_query->have_posts() ) {
+        ob_start(); // Démarrer le tampon de sortie
+        while ( $photo_query->have_posts() ) {
+            $photo_query->the_post();
+
+            // Récupérer l'image attachée au post
+            $attachments = get_attached_media( 'image', get_the_ID() );
+
+            if ( !empty( $attachments ) ) {
+                foreach ( $attachments as $attachment ) {
+                    $attachment_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' );
+                    echo '<img src="' . esc_url( $attachment_url[0] ) . '" alt="' . esc_attr( get_the_title() ) . '">';
+                }
+            }
+        }
+        $content = ob_get_clean(); // Obtenir le contenu tamponné
+        wp_send_json_success( $content ); // Envoyer une réponse AJAX avec les nouvelles photos
+    } else {
+        wp_send_json_error( 'Aucune photo supplémentaire' ); // Indiquer qu'il n'y a plus de photos
+    }
+
+    // Terminer la requête AJAX
+    wp_reset_postdata();
+    wp_die();
+}
+
+
 add_action('init', 'nathaliemota_init');
 add_action ('after_setup_theme', 'nathaliemota_setup');
 add_action('wp_enqueue_scripts', 'nathaliemota_register_assets');
@@ -237,3 +281,6 @@ add_action( 'wp_ajax_get_previous_photo', 'get_previous_photo_ajax' );
 add_action( 'wp_ajax_nopriv_get_previous_photo', 'get_previous_photo_ajax' );
 add_action( 'wp_ajax_get_next_photo', 'get_next_photo_ajax' );
 add_action( 'wp_ajax_nopriv_get_next_photo', 'get_next_photo_ajax' );
+// Enregistrer les actions AJAX pour les utilisateurs connectés et non connectés
+add_action( 'wp_ajax_load_more_photos', 'load_more_photos' );
+add_action( 'wp_ajax_nopriv_load_more_photos', 'load_more_photos' );
