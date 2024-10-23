@@ -1,3 +1,42 @@
+<div class="filter-bar">
+    <!-- Bouton pour filtrer par catégorie -->
+    <div class="dropdown">
+        <button class="btn-filter" id="categoryFilterBtn">Catégorie</button>
+        <div class="dropdown-content" id="categoryDropdown">
+            <?php
+            $terms = get_terms(array(
+                'taxonomy'   => 'evenement',
+                'hide_empty' => true, // Masquer les catégories vides
+            ));
+
+            if (!empty($terms) && !is_wp_error($terms)) {
+                foreach ($terms as $term) {
+                    echo '<a href="#" class="category-option" data-term-id="' . esc_attr($term->term_id) . '">' . esc_html($term->name) . '</a>';
+                }
+            }
+            ?>
+        </div>
+    </div>
+    <!-- Bouton pour filtrer par format -->
+    <div class="dropdown">
+        <button class="btn-filter" id="formatFilterBtn">Format</button>
+        <div class="dropdown-content" id="formatDropdown">
+            <?php
+            $formats = get_terms(array(
+                'taxonomy'   => 'format',
+                'hide_empty' => true, // Masquer les formats vides
+            ));
+
+            if (!empty($formats) && !is_wp_error($formats)) {
+                foreach ($formats as $format) {
+                    echo '<a href="#" class="format-option" data-term-id="' . esc_attr($format->term_id) . '">' . esc_html($format->name) . '</a>';
+                }
+            }
+            ?>
+        </div>
+    </div>
+</div>
+
 <div class="image-bloc">
     <?php
     // Requête initiale pour récupérer les 8 premières photos
@@ -22,9 +61,7 @@
                     $attachment_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' );
 
                     // Afficher chaque image attachée
-                    echo '<div class="cross-sell-pic">';
                     echo '<img src="' . esc_url( $attachment_url[0] ) . '" alt="' . esc_attr( get_the_title() ) . '">';
-                    echo '</div>';
                 }
             }
         }
@@ -38,11 +75,3 @@
 <div class="image-bloc-btn">
     <button type="button" id="loadMoreBtn" class="btn-submit">Charger plus</button>
 </div>
-
-<?php
-// Localisation du script AJAX
-wp_localize_script('nathaliemota-scripts', 'ajax_object', array(
-    'ajax_url' => admin_url('admin-ajax.php'),
-    'security' => wp_create_nonce('load_more_nonce'), // Nonce pour la sécurité
-));
-?>
