@@ -35,6 +35,13 @@
             ?>
         </div>
     </div>
+    <div class="dropdown">
+        <button class="btn-filter" id="sortFilterBtn">Trier par</button>
+        <div class="dropdown-content" id="sortDropdown">
+            <a href="#" class="sort-option" data-order="DESC">À partir des plus récentes</a>
+            <a href="#" class="sort-option" data-order="ASC">À partir des plus anciennes</a>
+        </div>
+    </div>
 </div>
 
 <div class="image-bloc">

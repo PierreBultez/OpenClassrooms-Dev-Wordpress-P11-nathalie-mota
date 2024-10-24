@@ -104,19 +104,15 @@ function nathaliemota_register_assets () {
 }
 
 function filter_photos_by_category() {
-    if ( !check_ajax_referer( 'filter_nonce', 'security', false ) ) {
-        wp_send_json_error( 'Nonce invalide.' );
+    if (!check_ajax_referer('filter_nonce', 'security', false)) {
+        wp_send_json_error('Nonce invalide.');
         wp_die();
     }
 
-    $category_id = isset( $_POST['category_id'] ) ? intval( $_POST['category_id'] ) : 0;
-    $format_id = isset( $_POST['format_id'] ) ? intval( $_POST['format_id'] ) : 0;
-    $paged = isset( $_POST['paged'] ) ? intval( $_POST['paged'] ) : 1;
-
-    // Loguer les valeurs reçues
-    error_log("Catégorie ID: " . $category_id);
-    error_log("Format ID: " . $format_id);
-    error_log("Page: " . $paged);
+    $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
+    $format_id = isset($_POST['format_id']) ? intval($_POST['format_id']) : 0;
+    $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+    $order = isset($_POST['order']) && $_POST['order'] === 'asc' ? 'ASC' : 'DESC';
 
     // Construire la tax_query pour les catégories et éventuellement les formats
     $tax_query = array('relation' => 'AND');
@@ -140,35 +136,37 @@ function filter_photos_by_category() {
     // Arguments de la requête WP_Query
     $args = array(
         'post_type'      => 'photographies',
-        'posts_per_page' => 8, // Limite à 8 photos par page
-        'post_status'    => 'publish',
+        'posts_per_page' => 8,
         'paged'          => $paged,
-        'tax_query'      => $tax_query, // Ne pas vérifier le nombre, passer la requête telle quelle
+        'post_status'    => 'publish',
+        'tax_query'      => $tax_query,
+        'orderby'        => 'date', // Tri par date
+        'order'          => $order, // Utiliser le tri passé via AJAX
     );
 
-    $photo_query = new WP_Query( $args );
+    $photo_query = new WP_Query($args);
 
-    if ( $photo_query->have_posts() ) {
+    if ($photo_query->have_posts()) {
         ob_start(); // Démarrer le tampon de sortie
-        while ( $photo_query->have_posts() ) {
+        while ($photo_query->have_posts()) {
             $photo_query->the_post();
 
             // Récupérer les images jointes à la publication actuelle
-            $attachments = get_attached_media( 'image', get_the_ID() );
+            $attachments = get_attached_media('image', get_the_ID());
 
-            if ( !empty( $attachments ) ) {
-                foreach ( $attachments as $attachment ) {
-                    $attachment_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' );
-                    echo '<img src="' . esc_url( $attachment_url[0] ) . '" alt="' . esc_attr( get_the_title() ) . '">';
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    $attachment_url = wp_get_attachment_image_src($attachment->ID, 'photo-detail');
+                    echo '<img src="' . esc_url($attachment_url[0]) . '" alt="' . esc_attr(get_the_title()) . '">';
                 }
             }
         }
 
         $content = ob_get_clean(); // Obtenir le contenu tamponné
         $has_more_posts = $photo_query->max_num_pages > $paged; // Vérifier s'il reste des photos à afficher
-        wp_send_json_success( array('content' => $content, 'has_more' => $has_more_posts) ); // Envoyer une réponse avec les photos filtrées et s'il reste des photos
+        wp_send_json_success(array('content' => $content, 'has_more' => $has_more_posts));
     } else {
-        wp_send_json_error( 'Aucune photo trouvée dans cette catégorie.' );
+        wp_send_json_error('Aucune photo trouvée.');
     }
 
     wp_reset_postdata();
@@ -176,14 +174,15 @@ function filter_photos_by_category() {
 }
 
 function filter_photos_by_format() {
-    if ( !check_ajax_referer( 'filter_nonce', 'security', false ) ) {
-        wp_send_json_error( 'Nonce invalide.' );
+    if (!check_ajax_referer('filter_nonce', 'security', false)) {
+        wp_send_json_error('Nonce invalide.');
         wp_die();
     }
 
-    $format_id = isset( $_POST['format_id'] ) ? intval( $_POST['format_id'] ) : 0;
-    $category_id = isset( $_POST['category_id'] ) ? intval( $_POST['category_id'] ) : 0;
-    $paged = isset( $_POST['paged'] ) ? intval( $_POST['paged'] ) : 1;
+    $format_id = isset($_POST['format_id']) ? intval($_POST['format_id']) : 0;
+    $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
+    $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+    $order = isset($_POST['order']) && $_POST['order'] === 'asc' ? 'ASC' : 'DESC';
 
     // Construire la tax_query pour les formats et éventuellement les catégories
     $tax_query = array('relation' => 'AND');
@@ -207,20 +206,97 @@ function filter_photos_by_format() {
     // Arguments de la requête WP_Query
     $args = array(
         'post_type'      => 'photographies',
-        'posts_per_page' => 8, // Limite à 8 photos par page
+        'posts_per_page' => 8,
+        'paged'          => $paged,
+        'post_status'    => 'publish',
+        'tax_query'      => $tax_query,
+        'orderby'        => 'date', // Tri par date
+        'order'          => $order, // Utiliser le tri passé via AJAX
+    );
+
+    $photo_query = new WP_Query($args);
+
+    if ($photo_query->have_posts()) {
+        ob_start(); // Démarrer le tampon de sortie
+        while ($photo_query->have_posts()) {
+            $photo_query->the_post();
+
+            // Récupérer les images jointes à la publication actuelle
+            $attachments = get_attached_media('image', get_the_ID());
+
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    $attachment_url = wp_get_attachment_image_src($attachment->ID, 'photo-detail');
+                    echo '<img src="' . esc_url($attachment_url[0]) . '" alt="' . esc_attr(get_the_title()) . '">';
+                }
+            }
+        }
+
+        $content = ob_get_clean(); // Obtenir le contenu tamponné
+        $has_more_posts = $photo_query->max_num_pages > $paged; // Vérifier s'il reste des photos à afficher
+        wp_send_json_success(array('content' => $content, 'has_more' => $has_more_posts));
+    } else {
+        wp_send_json_error('Aucune photo trouvée dans ce format.');
+    }
+
+    wp_reset_postdata();
+    wp_die();
+}
+
+function filter_photos_by_order() {
+    if ( !check_ajax_referer( 'filter_nonce', 'security', false ) ) {
+        error_log('Nonce invalide');
+        wp_die();
+    }
+
+    // Assainir et valider les données reçues
+    $category_id = isset( $_POST['category_id'] ) ? absint( $_POST['category_id'] ) : 0;
+    $format_id = isset( $_POST['format_id'] ) ? absint( $_POST['format_id'] ) : 0;
+    $order = isset( $_POST['order'] ) && in_array( $_POST['order'], array('ASC', 'DESC') ) ? sanitize_text_field( $_POST['order'] ) : 'DESC';
+    $paged = isset( $_POST['paged'] ) ? absint( $_POST['paged'] ) : 1;
+
+    // Vérification des paramètres avant de continuer
+    error_log("Catégorie ID: " . $category_id);
+    error_log("Format ID: " . $format_id);
+    error_log("Order: " . $order);
+    error_log("Page: " . $paged);
+
+    $tax_query = array('relation' => 'AND');
+
+    if ($category_id) {
+        $tax_query[] = array(
+            'taxonomy' => 'evenement',
+            'field'    => 'term_id',
+            'terms'    => $category_id,
+        );
+    }
+
+    if ($format_id) {
+        $tax_query[] = array(
+            'taxonomy' => 'format',
+            'field'    => 'term_id',
+            'terms'    => $format_id,
+        );
+    }
+
+    $args = array(
+        'post_type'      => 'photographies',
+        'posts_per_page' => 8,
         'post_status'    => 'publish',
         'paged'          => $paged,
-        'tax_query'      => $tax_query, // Ne pas vérifier le nombre, passer la requête telle quelle
+        'order'          => $order, // Tri par date
+        'orderby'        => 'date',
+        'tax_query'      => $tax_query,
     );
+
+    error_log(print_r($args, true));
 
     $photo_query = new WP_Query( $args );
 
     if ( $photo_query->have_posts() ) {
-        ob_start(); // Démarrer le tampon de sortie
+        ob_start();
         while ( $photo_query->have_posts() ) {
             $photo_query->the_post();
-
-            // Récupérer les images jointes à la publication actuelle
             $attachments = get_attached_media( 'image', get_the_ID() );
 
             if ( !empty( $attachments ) ) {
@@ -231,11 +307,11 @@ function filter_photos_by_format() {
             }
         }
 
-        $content = ob_get_clean(); // Obtenir le contenu tamponné
-        $has_more_posts = $photo_query->max_num_pages > $paged; // Vérifier s'il reste des photos à afficher
-        wp_send_json_success( array('content' => $content, 'has_more' => $has_more_posts) ); // Envoyer une réponse avec les photos filtrées et s'il reste des photos
+        $content = ob_get_clean();
+        $has_more_posts = $photo_query->max_num_pages > $paged;
+        wp_send_json_success( array('content' => $content, 'has_more' => $has_more_posts) );
     } else {
-        wp_send_json_error( 'Aucune photo trouvée dans ce format.' );
+        wp_send_json_error( 'Aucune photo trouvée.' );
     }
 
     wp_reset_postdata();
@@ -244,11 +320,12 @@ function filter_photos_by_format() {
 
 function load_more_photos() {
     // Vérification de la requête AJAX
-    check_ajax_referer( 'load_more_nonce', 'security' );
+    check_ajax_referer('load_more_nonce', 'security');
 
-    $paged = isset( $_POST['paged'] ) ? intval( $_POST['paged'] ) : 1;
-    $category_id = isset( $_POST['category_id'] ) ? intval( $_POST['category_id'] ) : 0;
-    $format_id = isset( $_POST['format_id'] ) ? intval( $_POST['format_id'] ) : 0;
+    $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+    $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
+    $format_id = isset($_POST['format_id']) ? intval($_POST['format_id']) : 0;
+    $order = isset($_POST['order']) && $_POST['order'] === 'asc' ? 'ASC' : 'DESC';
 
     // Construire le tableau de requête pour les taxonomies
     $tax_query = array('relation' => 'AND'); // Assurer la combinaison des filtres
@@ -272,34 +349,37 @@ function load_more_photos() {
     // Arguments de la requête WP_Query
     $args = array(
         'post_type'      => 'photographies',
-        'posts_per_page' => 8,
+        'posts_per_page' => 8, // Limite à 8 photos par page
         'paged'          => $paged, // Pagination
         'post_status'    => 'publish',
-        'tax_query'      => count($tax_query) > 1 ? $tax_query : '',
+        'tax_query'      => $tax_query, // Appliquer les filtres
+        'orderby'        => 'date', // Trier par date
+        'order'          => $order, // Utiliser l'ordre de tri sélectionné (ASC ou DESC)
     );
 
-    $photo_query = new WP_Query( $args );
+    $photo_query = new WP_Query($args);
 
-    if ( $photo_query->have_posts() ) {
+    if ($photo_query->have_posts()) {
         ob_start(); // Démarrer le tampon de sortie
-        while ( $photo_query->have_posts() ) {
+        while ($photo_query->have_posts()) {
             $photo_query->the_post();
 
             // Récupérer l'image attachée au post
-            $attachments = get_attached_media( 'image', get_the_ID() );
+            $attachments = get_attached_media('image', get_the_ID());
 
-            if ( !empty( $attachments ) ) {
-                foreach ( $attachments as $attachment ) {
-                    $attachment_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' );
-                    echo '<img src="' . esc_url( $attachment_url[0] ) . '" alt="' . esc_attr( get_the_title() ) . '">';
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    $attachment_url = wp_get_attachment_image_src($attachment->ID, 'photo-detail');
+                    echo '<img src="' . esc_url($attachment_url[0]) . '" alt="' . esc_attr(get_the_title()) . '">';
                 }
             }
         }
+
         $content = ob_get_clean(); // Obtenir le contenu tamponné
         $has_more_posts = $photo_query->max_num_pages > $paged; // Vérifier s'il reste des photos à afficher
-        wp_send_json_success( array( 'content' => $content, 'has_more' => $has_more_posts ) );
+        wp_send_json_success(array('content' => $content, 'has_more' => $has_more_posts)); // Envoyer une réponse avec les nouvelles photos et vérifier s'il y a encore plus
     } else {
-        wp_send_json_error( 'Aucune photo supplémentaire' );
+        wp_send_json_error('Aucune photo supplémentaire');
     }
 
     wp_reset_postdata();
@@ -453,3 +533,6 @@ add_action( 'wp_ajax_filter_photos_by_category', 'filter_photos_by_category' );
 add_action( 'wp_ajax_nopriv_filter_photos_by_category', 'filter_photos_by_category' );
 add_action( 'wp_ajax_filter_photos_by_format', 'filter_photos_by_format' );
 add_action( 'wp_ajax_nopriv_filter_photos_by_format', 'filter_photos_by_format' );
+// Enregistrer l'action pour les utilisateurs connectés et non connectés
+add_action( 'wp_ajax_filter_photos_by_order', 'filter_photos_by_order' );
+add_action( 'wp_ajax_nopriv_filter_photos_by_order', 'filter_photos_by_order' );

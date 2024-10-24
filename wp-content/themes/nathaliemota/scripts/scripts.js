@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /* jQuery(document).ready(function($) {
+    jQuery(document).ready(function($) {
         // Lorsqu'une option de catégorie est sélectionnée
         $('.category-option').on('click', function(e) {
             e.preventDefault();
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-    }); */
+    });
 
     jQuery(document).ready(function($) {
         // Vérifier si l'objet photo_navigation_ajax_object est défini
@@ -290,6 +290,154 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('Erreur AJAX : ' + textStatus);
                     $('#loadMoreBtn').text('Erreur, réessayez');
                 }
+            });
+        });
+    });
+
+    jQuery(document).ready(function($) {
+        let paged = 2; // Commencer à la page 2 car la page 1 est déjà affichée
+        let selectedCategory = null; // Variable pour stocker l'ID de la catégorie sélectionnée
+        let selectedFormat = null; // Variable pour stocker l'ID du format sélectionné
+        let selectedSort = 'desc'; // Par défaut trier par les plus récentes
+
+        // Détacher tous les événements "click" existants avant d'ajouter le nouveau
+        $('.category-option').off('click').on('click', function(e) {
+            e.preventDefault();
+            selectedCategory = $(this).data('term-id');
+            paged = 1; // Réinitialiser la pagination
+            let $button = $('#categoryFilterBtn');
+            let $loadMoreBtn = $('#loadMoreBtn');
+
+            $button.text('Chargement...');
+            $loadMoreBtn.text('Afficher plus').prop('disabled', false);
+
+            $.ajax({
+                url: filter_ajax_object.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'filter_photos_by_category',
+                    security: filter_ajax_object.security,
+                    category_id: selectedCategory,
+                    format_id: selectedFormat,
+                    paged: paged,
+                    order: selectedSort // Ajouter l'option de tri
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('.image-bloc').html(response.data.content);
+                        $button.text('Catégorie');
+                        paged++;
+
+                        if (!response.data.has_more) {
+                            $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
+                        }
+                    } else {
+                        $('.image-bloc').html('<p>' + response.data + '</p>');
+                        $button.text('Catégorie');
+                        $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Erreur AJAX : ' + textStatus);
+                    $button.text('Erreur, réessayez');
+                }
+            });
+        });
+
+        // Même traitement pour les formats
+        $('.format-option').off('click').on('click', function(e) {
+            e.preventDefault();
+            selectedFormat = $(this).data('term-id');
+            paged = 1; // Réinitialiser la pagination
+            let $button = $('#formatFilterBtn');
+            let $loadMoreBtn = $('#loadMoreBtn');
+
+            $button.text('Chargement...');
+            $loadMoreBtn.text('Afficher plus').prop('disabled', false);
+
+            $.ajax({
+                url: filter_ajax_object.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'filter_photos_by_format',
+                    security: filter_ajax_object.security,
+                    category_id: selectedCategory,
+                    format_id: selectedFormat,
+                    paged: paged,
+                    order: selectedSort // Ajouter l'option de tri
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('.image-bloc').html(response.data.content);
+                        $button.text('Format');
+                        paged++;
+
+                        if (!response.data.has_more) {
+                            $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
+                        }
+                    } else {
+                        $('.image-bloc').html('<p>' + response.data + '</p>');
+                        $button.text('Format');
+                        $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Erreur AJAX : ' + textStatus);
+                    $button.text('Erreur, réessayez');
+                }
+            });
+        });
+
+        // Gérer le tri
+        $('.sort-option').off('click').on('click', function(e) {
+            e.preventDefault();
+            selectedSort = $(this).data('order'); // Récupérer l'ordre de tri
+            // console.log("Tri sélectionné : " + selectedSort);
+            paged = 1; // Réinitialiser la pagination
+            let $button = $('#sortFilterBtn');
+            let $loadMoreBtn = $('#loadMoreBtn');
+
+            $button.text('Chargement...');
+            $loadMoreBtn.text('Afficher plus').prop('disabled', false);
+
+            $.ajax({
+                url: filter_ajax_object.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'filter_photos_by_order',
+                    security: filter_ajax_object.security,
+                    category_id: selectedCategory,
+                    format_id: selectedFormat,
+                    paged: paged,
+                    order: selectedSort // Passer l'option de tri
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('.image-bloc').html(response.data.content);
+                        $button.text('Trier par');
+                        paged++;
+
+                        if (!response.data.has_more) {
+                            $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
+                        }
+                    } else {
+                        $('.image-bloc').html('<p>' + response.data + '</p>');
+                        $button.text('Trier par');
+                        $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Erreur AJAX : ' + textStatus);
+                    $button.text('Erreur, réessayez');
+                }
+            });
+            console.log({
+                action: 'filter_photos_by_order',
+                security: filter_ajax_object.security,
+                category_id: selectedCategory || 'Aucune catégorie sélectionnée',
+                format_id: selectedFormat || 'Aucun format sélectionné',
+                paged: paged,
+                order: selectedSort
             });
         });
     });
