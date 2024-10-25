@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactLink = document.querySelector('a[href="#contact"]');
     const modalPhoto = document.getElementById('contactModalPhoto');
     const contactBtn = document.getElementById('contactBtn');
+    const categoryBtn = document.getElementById('categoryFilterBtn');
+    const formatBtn = document.getElementById('formatFilterBtn');
+    const sortBtn = document.getElementById('sortFilterBtn');
+
+    const categoryDropdown = document.getElementById('categoryDropdown');
+    const formatDropdown = document.getElementById('formatDropdown');
+    const sortDropdown = document.getElementById('sortDropdown');
 
     burger.addEventListener('click', function() {
         menu.classList.toggle('active');
@@ -50,14 +57,116 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function closeAllDropdowns() {
+        categoryDropdown.classList.remove('active');
+        categoryBtn.classList.remove('active');
+        formatDropdown.classList.remove('active');
+        formatBtn.classList.remove('active');
+        sortDropdown.classList.remove('active');
+        sortBtn.classList.remove('active');
+
+        const categoryIcon = categoryBtn.querySelector('i');
+        if (categoryIcon) {
+            categoryIcon.classList.add('fa-chevron-down');
+            categoryIcon.classList.remove('fa-chevron-up');
+        }
+
+        const formatIcon = formatBtn.querySelector('i');
+        if (formatIcon) {
+            formatIcon.classList.add('fa-chevron-down');
+            formatIcon.classList.remove('fa-chevron-up');
+        }
+
+        const sortIcon = sortBtn.querySelector('i');
+        if (sortIcon) {
+            sortIcon.classList.add('fa-chevron-down');
+            sortIcon.classList.remove('fa-chevron-up');
+        }
+    }
+
+    categoryBtn.addEventListener('click', function(e) {
+        e.stopPropagation(); // Empêche le clic de se propager
+        const isActive = categoryDropdown.classList.contains('active');
+        closeAllDropdowns();
+
+        if (!isActive) {
+            categoryDropdown.classList.add('active');
+            categoryBtn.classList.add('active');
+            const categoryIcon = categoryBtn.querySelector('i');
+            if (categoryIcon) {
+                categoryIcon.classList.remove('fa-chevron-down');
+                categoryIcon.classList.add('fa-chevron-up');
+            }
+        } else {
+            // Rétablit l'icône sur chevron-down si le bouton était déjà actif
+            const categoryIcon = categoryBtn.querySelector('i');
+            if (categoryIcon) {
+                categoryIcon.classList.remove('fa-chevron-up');
+                categoryIcon.classList.add('fa-chevron-down');
+            }
+        }
+    });
+
+    formatBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isActive = formatDropdown.classList.contains('active');
+        closeAllDropdowns();
+
+        if (!isActive) {
+            formatDropdown.classList.add('active');
+            formatBtn.classList.add('active');
+            const formatIcon = formatBtn.querySelector('i');
+            if (formatIcon) {
+                formatIcon.classList.remove('fa-chevron-down');
+                formatIcon.classList.add('fa-chevron-up');
+            }
+        } else {
+            // Rétablit l'icône sur chevron-down si le bouton était déjà actif
+            const formatIcon = formatBtn.querySelector('i');
+            if (formatIcon) {
+                formatIcon.classList.remove('fa-chevron-up');
+                formatIcon.classList.add('fa-chevron-down');
+            }
+        }
+    });
+
+    sortBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isActive = sortDropdown.classList.contains('active');
+        closeAllDropdowns();
+
+        if (!isActive) {
+            sortDropdown.classList.add('active');
+            sortBtn.classList.add('active');
+            const sortIcon = sortBtn.querySelector('i');
+            if (sortIcon) {
+                sortIcon.classList.remove('fa-chevron-down');
+                sortIcon.classList.add('fa-chevron-up');
+            }
+        } else {
+            // Rétablit l'icône sur chevron-down si le bouton était déjà actif
+            const sortIcon = sortBtn.querySelector('i');
+            if (sortIcon) {
+                sortIcon.classList.remove('fa-chevron-up');
+                sortIcon.classList.add('fa-chevron-down');
+            }
+        }
+    });
+
+    document.addEventListener('click', function() {
+        closeAllDropdowns();
+    });
+
     jQuery(document).ready(function($) {
         // Lorsqu'une option de catégorie est sélectionnée
         $('.category-option').on('click', function(e) {
             e.preventDefault();
 
             let termId = $(this).data('term-id');
+            let termName = $(this).text();
             let $button = $('#categoryFilterBtn');
-            $button.text('Chargement...');
+            console.log('ID de la catégorie sélectionnée:', termId);
+            console.log('Nom de la catégorie sélectionnée:', termName);
 
             $.ajax({
                 url: filter_ajax_object.ajax_url, // URL de l'admin-ajax.php
@@ -70,15 +179,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: function(response) {
                     if (response.success) {
                         $('.image-bloc').html(response.data); // Mettre à jour les photos filtrées
-                        $button.text('Catégorie'); // Remettre le texte du bouton
+                        console.log('Réponse AJAX réussie, contenu mis à jour');
+                        $button.html(`${termName} <i class="fa-solid fa-chevron-up"></i>`); // Mettre à jour le texte du bouton avec le nom de la catégorie
+                        console.log('Texte du bouton mis à jour avec la catégorie:', termName);
                     } else {
                         $('.image-bloc').html('<p>' + response.data + '</p>'); // Afficher un message d'erreur si aucune photo n'est trouvée
-                        $button.text('Catégorie');
+                        $button.html('Catégorie <i class="fa-solid fa-chevron-down"></i>');
+                        console.log('Réponse AJAX échouée, texte du bouton réinitialisé');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
-                    $button.text('Erreur, réessayez');
+                    $button.html('Catégorie <i class="fa-solid fa-chevron-down"></i>');
                 }
             });
         });
@@ -300,10 +412,19 @@ document.addEventListener('DOMContentLoaded', function() {
         let selectedFormat = null; // Variable pour stocker l'ID du format sélectionné
         let selectedSort = 'desc'; // Par défaut trier par les plus récentes
 
-        // Détacher tous les événements "click" existants avant d'ajouter le nouveau
+        function toggleResetButton() {
+            if (selectedCategory || selectedFormat || selectedSort !== 'desc') {
+                $('#resetFiltersBtn').show();
+            } else {
+                $('#resetFiltersBtn').hide();
+            }
+        }
+
+        // Gestion du filtre de catégorie
         $('.category-option').off('click').on('click', function(e) {
             e.preventDefault();
             selectedCategory = $(this).data('term-id');
+            const termName = $(this).text().trim();
             paged = 1; // Réinitialiser la pagination
             let $button = $('#categoryFilterBtn');
             let $loadMoreBtn = $('#loadMoreBtn');
@@ -325,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: function(response) {
                     if (response.success) {
                         $('.image-bloc').html(response.data.content);
-                        $button.text('Catégorie');
+                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         paged++;
 
                         if (!response.data.has_more) {
@@ -333,21 +454,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else {
                         $('.image-bloc').html('<p>' + response.data + '</p>');
-                        $button.text('Catégorie');
+                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
-                    $button.text('Erreur, réessayez');
+                    $button.html('Catégorie <i class="fa-solid fa-chevron-down"></i>');
                 }
             });
         });
 
-        // Même traitement pour les formats
+        // Gestion du filtre de format
         $('.format-option').off('click').on('click', function(e) {
             e.preventDefault();
             selectedFormat = $(this).data('term-id');
+            const termName = $(this).text().trim();
             paged = 1; // Réinitialiser la pagination
             let $button = $('#formatFilterBtn');
             let $loadMoreBtn = $('#loadMoreBtn');
@@ -369,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: function(response) {
                     if (response.success) {
                         $('.image-bloc').html(response.data.content);
-                        $button.text('Format');
+                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         paged++;
 
                         if (!response.data.has_more) {
@@ -377,22 +499,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else {
                         $('.image-bloc').html('<p>' + response.data + '</p>');
-                        $button.text('Format');
+                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
-                    $button.text('Erreur, réessayez');
+                    $button.html('Format <i class="fa-solid fa-chevron-down"></i>');
                 }
             });
         });
 
-        // Gérer le tri
+        // Gestion du tri
         $('.sort-option').off('click').on('click', function(e) {
             e.preventDefault();
             selectedSort = $(this).data('order'); // Récupérer l'ordre de tri
-            // console.log("Tri sélectionné : " + selectedSort);
+            const sortLabel = $(this).text().trim();
             paged = 1; // Réinitialiser la pagination
             let $button = $('#sortFilterBtn');
             let $loadMoreBtn = $('#loadMoreBtn');
@@ -414,7 +536,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: function(response) {
                     if (response.success) {
                         $('.image-bloc').html(response.data.content);
-                        $button.text('Trier par');
+                        $button.html(`${sortLabel} <i class="fa-solid fa-chevron-down"></i>`);
                         paged++;
 
                         if (!response.data.has_more) {
@@ -422,13 +544,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else {
                         $('.image-bloc').html('<p>' + response.data + '</p>');
-                        $button.text('Trier par');
+                        $button.html(`${sortLabel} <i class="fa-solid fa-chevron-down"></i>`);
                         $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
-                    $button.text('Erreur, réessayez');
+                    $button.html('Trier par <i class="fa-solid fa-chevron-down"></i>');
                 }
             });
             console.log({
@@ -438,6 +560,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 format_id: selectedFormat || 'Aucun format sélectionné',
                 paged: paged,
                 order: selectedSort
+            });
+        });
+
+        // Gestion du bouton de réinitialisation
+        $('#resetFiltersBtn').on('click', function(e) {
+            e.preventDefault();
+
+            // Réinitialiser les valeurs des filtres
+            selectedCategory = null;
+            selectedFormat = null;
+            selectedSort = 'desc';
+            paged = 1;
+
+            // Remettre les textes des boutons de filtre à leur valeur par défaut
+            $('#categoryFilterBtn').text('Catégorie');
+            $('#formatFilterBtn').text('Format');
+            $('#sortFilterBtn').text('Trier par');
+
+            // Recharger les photos sans filtres
+            $.ajax({
+                url: filter_ajax_object.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'filter_photos_by_category', // Assurez-vous que l'action correspond à votre logique de chargement initial
+                    security: filter_ajax_object.security,
+                    category_id: selectedCategory,
+                    format_id: selectedFormat,
+                    paged: paged,
+                    order: selectedSort
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('.image-bloc').html(response.data.content);
+                        $('#loadMoreBtn').text('Afficher plus').prop('disabled', false);
+                    } else {
+                        $('.image-bloc').html('<p>' + response.data + '</p>');
+                        $('#loadMoreBtn').text('Aucune photo supplémentaire').prop('disabled', true);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Erreur AJAX : ' + textStatus);
+                }
             });
         });
     });

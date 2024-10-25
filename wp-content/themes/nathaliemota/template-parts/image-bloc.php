@@ -1,7 +1,7 @@
 <div class="filter-bar">
     <!-- Bouton pour filtrer par catégorie -->
     <div class="dropdown">
-        <button class="btn-filter" id="categoryFilterBtn">Catégorie</button>
+        <button class="btn-filter" id="categoryFilterBtn">Catégorie<i class="fa-solid fa-chevron-down"></i></button>
         <div class="dropdown-content" id="categoryDropdown">
             <?php
             $terms = get_terms(array(
@@ -19,7 +19,7 @@
     </div>
     <!-- Bouton pour filtrer par format -->
     <div class="dropdown">
-        <button class="btn-filter" id="formatFilterBtn">Format</button>
+        <button class="btn-filter" id="formatFilterBtn">Format<i class="fa-solid fa-chevron-down"></i></button>
         <div class="dropdown-content" id="formatDropdown">
             <?php
             $formats = get_terms(array(
@@ -35,13 +35,14 @@
             ?>
         </div>
     </div>
-    <div class="dropdown">
-        <button class="btn-filter" id="sortFilterBtn">Trier par</button>
+    <div class="dropdown" id="dropdown-right">
+        <button class="btn-filter" id="sortFilterBtn">Trier par<i class="fa-solid fa-chevron-down"></i></button>
         <div class="dropdown-content" id="sortDropdown">
             <a href="#" class="sort-option" data-order="DESC">À partir des plus récentes</a>
             <a href="#" class="sort-option" data-order="ASC">À partir des plus anciennes</a>
         </div>
     </div>
+    <button id="resetFiltersBtn" class="btn-reset">Réinitialiser les filtres</button>
 </div>
 
 <div class="image-bloc">
