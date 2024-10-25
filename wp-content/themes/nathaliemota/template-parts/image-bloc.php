@@ -42,7 +42,9 @@
             <a href="#" class="sort-option" data-order="ASC">À partir des plus anciennes</a>
         </div>
     </div>
-    <button id="resetFiltersBtn" class="btn-reset">Réinitialiser les filtres</button>
+</div>
+<div class="reset-button">
+    <button id="resetFiltersBtn" class="btn-reset">Réinitialiser les filtres<i class="fa-solid fa-xmark"></i></button>
 </div>
 
 <div class="image-bloc">

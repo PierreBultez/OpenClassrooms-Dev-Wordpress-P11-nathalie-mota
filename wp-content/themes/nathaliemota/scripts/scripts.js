@@ -414,9 +414,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function toggleResetButton() {
             if (selectedCategory || selectedFormat || selectedSort !== 'desc') {
-                $('#resetFiltersBtn').show();
+                $('#resetFiltersBtn').css("display", "flex");
             } else {
-                $('#resetFiltersBtn').hide();
+                $('#resetFiltersBtn').css("display", "none");
             }
         }
 
@@ -424,12 +424,11 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.category-option').off('click').on('click', function(e) {
             e.preventDefault();
             selectedCategory = $(this).data('term-id');
-            const termName = $(this).text().trim();
             paged = 1; // Réinitialiser la pagination
             let $button = $('#categoryFilterBtn');
             let $loadMoreBtn = $('#loadMoreBtn');
 
-            $button.text('Chargement...');
+            $button.text($(this).text()); // Met à jour le texte du bouton avec la catégorie sélectionnée
             $loadMoreBtn.text('Afficher plus').prop('disabled', false);
 
             $.ajax({
@@ -446,7 +445,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: function(response) {
                     if (response.success) {
                         $('.image-bloc').html(response.data.content);
-                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         paged++;
 
                         if (!response.data.has_more) {
@@ -454,9 +452,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else {
                         $('.image-bloc').html('<p>' + response.data + '</p>');
-                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
                     }
+                    toggleResetButton();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
@@ -474,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let $button = $('#formatFilterBtn');
             let $loadMoreBtn = $('#loadMoreBtn');
 
-            $button.text('Chargement...');
+            $button.text($(this).text()); // Met à jour le texte du bouton avec le format sélectionné
             $loadMoreBtn.text('Afficher plus').prop('disabled', false);
 
             $.ajax({
@@ -491,7 +489,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: function(response) {
                     if (response.success) {
                         $('.image-bloc').html(response.data.content);
-                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         paged++;
 
                         if (!response.data.has_more) {
@@ -499,9 +496,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else {
                         $('.image-bloc').html('<p>' + response.data + '</p>');
-                        $button.html(`${termName} <i class="fa-solid fa-chevron-down"></i>`);
                         $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
                     }
+                    toggleResetButton();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
@@ -514,12 +511,11 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.sort-option').off('click').on('click', function(e) {
             e.preventDefault();
             selectedSort = $(this).data('order'); // Récupérer l'ordre de tri
-            const sortLabel = $(this).text().trim();
             paged = 1; // Réinitialiser la pagination
             let $button = $('#sortFilterBtn');
             let $loadMoreBtn = $('#loadMoreBtn');
 
-            $button.text('Chargement...');
+            $button.text($(this).text()); // Met à jour le texte du bouton avec le tri sélectionné
             $loadMoreBtn.text('Afficher plus').prop('disabled', false);
 
             $.ajax({
@@ -536,7 +532,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: function(response) {
                     if (response.success) {
                         $('.image-bloc').html(response.data.content);
-                        $button.html(`${sortLabel} <i class="fa-solid fa-chevron-down"></i>`);
                         paged++;
 
                         if (!response.data.has_more) {
@@ -544,9 +539,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else {
                         $('.image-bloc').html('<p>' + response.data + '</p>');
-                        $button.html(`${sortLabel} <i class="fa-solid fa-chevron-down"></i>`);
                         $loadMoreBtn.text('Aucune photo supplémentaire').prop('disabled', true);
                     }
+                    toggleResetButton();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
@@ -598,11 +593,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         $('.image-bloc').html('<p>' + response.data + '</p>');
                         $('#loadMoreBtn').text('Aucune photo supplémentaire').prop('disabled', true);
                     }
+                    toggleResetButton();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Erreur AJAX : ' + textStatus);
                 }
             });
         });
+        toggleResetButton();
     });
 });
