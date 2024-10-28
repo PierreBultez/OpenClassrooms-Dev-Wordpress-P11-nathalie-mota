@@ -120,7 +120,7 @@ get_header(); // Inclut le fichier header.php du thème
 <div class="cross-sell">
     <h3>Vous aimerez aussi</h3>
 </div>
-<div class="cross-sell-pics">
+<div class="image-bloc">
     <?php
     // Récupérer les termes de la taxonomie "evenement" associés à la photo actuelle
     $terms = get_the_terms( get_the_ID(), 'evenement' );
@@ -150,24 +150,8 @@ get_header(); // Inclut le fichier header.php du thème
             while ( $cross_sell_query->have_posts() ) {
                 $cross_sell_query->the_post();
 
-                // Récupérer les images jointes à la publication actuelle
-                $attachments = get_attached_media( 'image', get_the_ID() );
-
-                if ( !empty( $attachments ) ) {
-                    $attachment = array_shift( $attachments ); // Prendre la première image
-                    $attachment_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' ); // Récupérer l'URL de l'image
-                }
-
-                // Afficher chaque image attachée dans les divs cross-sell-pic-1 et cross-sell-pic-2
-                echo '<div class="cross-sell-pic-' . $count . '">';
-                if ( isset( $attachment_url ) ) {
-                    echo '<img src="' . esc_url( $attachment_url[0] ) . '" alt="' . esc_attr( get_the_title() ) . '">';
-                } else {
-                    echo '<p>Aucune image trouvée pour cette publication.</p>';
-                }
-                echo '</div>';
-
-                $count++; // Incrémenter pour passer à la deuxième div
+                // Inclure le template part pour chaque photo cross-sell
+                get_template_part('template-parts/image-template');
             }
         } else {
             echo '<p>Aucune autre photo trouvée dans cette catégorie.</p>';

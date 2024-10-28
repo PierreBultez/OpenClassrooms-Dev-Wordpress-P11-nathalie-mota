@@ -6,7 +6,7 @@
         <h1 class="hero-title">Photographe event</h1>
     </div>
 
-    <?php get_template_part( 'template-parts/image-bloc' ); ?>
+    <?php get_template_part('template-parts/images-bloc'); ?>
 
 </div>
 <?php get_footer(); ?>

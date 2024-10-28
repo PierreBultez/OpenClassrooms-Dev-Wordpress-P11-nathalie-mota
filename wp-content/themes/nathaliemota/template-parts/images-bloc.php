@@ -63,17 +63,8 @@
         while ( $photo_query->have_posts() ) {
             $photo_query->the_post();
 
-            // Récupérer les images jointes à la publication actuelle
-            $attachments = get_attached_media( 'image', get_the_ID() );
-
-            if ( !empty( $attachments ) ) {
-                foreach ( $attachments as $attachment ) {
-                    $attachment_url = wp_get_attachment_image_src( $attachment->ID, 'photo-detail' );
-
-                    // Afficher chaque image attachée
-                    echo '<img src="' . esc_url( $attachment_url[0] ) . '" alt="' . esc_attr( get_the_title() ) . '">';
-                }
-            }
+            // Inclure le template part pour afficher la photo
+            get_template_part('template-parts/image-template');
         }
     } else {
         echo '<p>Aucune photo trouvée.</p>';
