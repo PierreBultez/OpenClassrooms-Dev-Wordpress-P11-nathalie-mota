@@ -26,7 +26,10 @@ if (!empty($attachments)) {
                 <!-- Icône expand en haut à droite -->
                 <a href="#"
                    class="photo-expand"
-                   data-photo-id="<?php echo get_the_ID(); ?>">
+                   data-photo-id="<?php echo esc_attr(get_the_ID()); ?>"
+                   data-url="<?php echo esc_url($attachment_url[0]); ?>"
+                   data-reference="<?php echo esc_html($photo_reference); ?>"
+                   data-category="<?php echo esc_html($category_name); ?>">
                     <i class="fa-solid fa-expand mota-expand"></i>
                 </a>
             </div>

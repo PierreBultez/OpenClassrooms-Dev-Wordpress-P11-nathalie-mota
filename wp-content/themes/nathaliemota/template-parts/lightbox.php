@@ -1,26 +1,22 @@
 <div id="lightbox-overlay" class="lightbox-overlay" style="display: none;">
     <div class="lightbox-content">
-        <!-- Bouton de fermeture -->
+
         <button class="lightbox-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <!-- Navigation Précédente -->
-        <button class="lightbox-prev">
+        <button class="lightbox-prev" id="prevArrowLightbox">
             <i class="fa-solid fa-arrow-left-long"></i><span class="description-photo">Précédente</span>
         </button>
 
-        <!-- Affichage de l'image -->
         <div class="lightbox-image-container">
             <img src="" alt="" class="lightbox-image">
         </div>
 
-        <!-- Navigation Suivante -->
-        <button class="lightbox-next">
+        <button class="lightbox-next" id="nextArrowLightbox">
             <span class="description-photo">Suivante</span><i class="fa-solid fa-arrow-right-long"></i>
         </button>
 
-        <!-- Informations sur la photo -->
         <div class="lightbox-info">
             <span class="lightbox-reference description-photo">
                 <?php echo esc_html(get_field('reference_photo')); ?>

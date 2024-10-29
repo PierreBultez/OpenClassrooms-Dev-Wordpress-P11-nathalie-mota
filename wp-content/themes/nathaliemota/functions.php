@@ -324,6 +324,7 @@ function get_photo_data() {
 
         if ($photo_url) {
             wp_send_json_success([
+                'id' => $photo_id,  // Ajout de l'ID de la photo
                 'url' => $photo_url,
                 'reference' => $photo_reference,
                 'category' => $photo_category
@@ -337,7 +338,118 @@ function get_photo_data() {
     wp_die();
 }
 
-function get_adjacent_photo_data() {
+function get_previous_lightbox_photo_ajax() {
+
+    // Vérifier le nonce pour la sécurité
+    check_ajax_referer( 'lightbox_nonce', 'security' );
+
+    // Récupérer l'ID du post actuel depuis la requête AJAX
+    $current_post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+
+    if ( $current_post_id == 0 ) {
+        wp_send_json_error( 'ID du post actuel non valide.' );
+        return;
+    }
+
+    // Créer une requête personnalisée pour récupérer le post précédent
+    $args = array(
+        'post_type'      => 'photographies', // Custom post type
+        'posts_per_page' => 1,               // Un seul post
+        'post_status'    => 'publish',       // Post publié
+        'orderby'        => 'date',          // Trier par date
+        'order'          => 'DESC',          // Ordre décroissant
+        'post__not_in'   => array($current_post_id), // Exclure le post actuel
+        'date_query'     => array(
+            'before' => get_the_date('Y-m-d H:i:s', $current_post_id), // Récupérer les posts avant le post actuel
+        ),
+    );
+
+    $previous_query = new WP_Query($args);
+
+    if ($previous_query->have_posts()) {
+        $previous_query->the_post();
+        $previous_post_id = get_the_ID();
+        $image_url = wp_get_attachment_image_url(get_post_thumbnail_id($previous_post_id), 'photo-detail');
+
+        if (!$image_url) {
+            $attachments = get_attached_media('image', $previous_post_id);
+            if (!empty($attachments)) {
+                $attachment = reset($attachments);
+                $image_url = wp_get_attachment_image_url($attachment->ID, 'photo-detail');
+            }
+        }
+
+        wp_send_json_success([
+            'id'        => $previous_post_id,
+            'url'       => $image_url,
+            'reference' => get_field('reference_photo', $previous_post_id),
+            'category'  => wp_get_post_terms($previous_post_id, 'evenement')[0]->name ?? 'Non classé'
+        ]);
+    } else {
+        wp_send_json_error('Aucune photo précédente trouvée.');
+    }
+
+    wp_reset_postdata();
+    wp_die();
+}
+
+function get_next_lightbox_photo_ajax() {
+
+    // Vérifier le nonce pour la sécurité
+    check_ajax_referer( 'lightbox_nonce', 'security' );
+
+    // Récupérer l'ID du post actuel depuis la requête AJAX
+    $current_post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+
+    if ( $current_post_id == 0 ) {
+        wp_send_json_error( 'ID du post actuel non valide.' );
+        return;
+    }
+
+    // Créer une requête personnalisée pour récupérer le post précédent
+    $args = array(
+        'post_type'      => 'photographies', // Custom post type
+        'posts_per_page' => 1,               // Un seul post
+        'post_status'    => 'publish',       // Post publié
+        'orderby'        => 'date',          // Trier par date
+        'order'          => 'ASC',          // Ordre décroissant
+        'post__not_in'   => array($current_post_id), // Exclure le post actuel
+        'date_query'     => array(
+            'after' => get_the_date('Y-m-d H:i:s', $current_post_id), // Récupérer les posts avant le post actuel
+        ),
+    );
+
+    $next_query = new WP_Query($args);
+
+    if ($next_query->have_posts()) {
+        $next_query->the_post();
+        $next_post_id = get_the_ID();
+        $image_url = wp_get_attachment_image_url(get_post_thumbnail_id($next_post_id), 'photo-detail');
+
+        if (!$image_url) {
+            $attachments = get_attached_media('image', $next_post_id);
+            if (!empty($attachments)) {
+                $attachment = reset($attachments);
+                $image_url = wp_get_attachment_image_url($attachment->ID, 'photo-detail');
+            }
+        }
+
+        // Renvoyer l'ID du post et l'URL de l'image
+        wp_send_json_success([
+            'id'        => $next_post_id,
+            'url'       => $image_url,
+            'reference' => get_field('reference_photo', $next_post_id),
+            'category'  => wp_get_post_terms($next_post_id, 'evenement')[0]->name ?? 'Non classé'
+        ]);
+    } else {
+        wp_send_json_error('Aucune photo suivante trouvée.');
+    }
+
+    wp_reset_postdata();
+    wp_die();
+}
+
+/* function get_adjacent_photo_data() {
     check_ajax_referer('lightbox_nonce', 'security');
 
     $current_photo_id = isset($_POST['photo_id']) ? intval($_POST['photo_id']) : 0;
@@ -375,7 +487,7 @@ function get_adjacent_photo_data() {
     }
 
     wp_die();
-}
+} */
 
 add_action('init', 'nathaliemota_init');
 add_action ('after_setup_theme', 'nathaliemota_setup');
@@ -388,5 +500,9 @@ add_action( 'wp_ajax_load_more_photos', 'load_more_photos' );
 add_action( 'wp_ajax_nopriv_load_more_photos', 'load_more_photos' );
 add_action('wp_ajax_get_photo_data', 'get_photo_data');
 add_action('wp_ajax_nopriv_get_photo_data', 'get_photo_data');
-add_action('wp_ajax_get_adjacent_photo_data' , 'get_adjacent_photo_data');
-add_action('wp_ajax_nopriv_get_adjacent_photo_data' , 'get_adjacent_photo_data');
+// add_action('wp_ajax_get_adjacent_photo_data' , 'get_adjacent_photo_data');
+// add_action('wp_ajax_nopriv_get_adjacent_photo_data' , 'get_adjacent_photo_data');
+add_action( 'wp_ajax_get_previous_lightbox_photo_ajax', 'get_previous_lightbox_photo_ajax' );
+add_action( 'wp_ajax_nopriv_get_previous_lightbox_photo_ajax', 'get_previous_lightbox_photo_ajax' );
+add_action( 'wp_ajax_get_next_lightbox_photo_ajax', 'get_next_lightbox_photo_ajax' );
+add_action( 'wp_ajax_nopriv_get_next_lightbox_photo_ajax', 'get_next_lightbox_photo_ajax' );
