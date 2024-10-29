@@ -17,14 +17,16 @@ if (!empty($attachments)) {
 
         <div class="photo-item" style="background-image: url('<?php echo esc_url($attachment_url[0]); ?>');">
             <div class="photo-overlay">
-                <span class="photo-reference"><?php echo esc_html($photo_reference); ?></span>
-                <span class="photo-category"><?php echo esc_html($category_name); ?></span>
+                <span class="photo-reference description-photo"><?php echo esc_html($photo_reference); ?></span>
+                <span class="photo-category description-photo"><?php echo esc_html($category_name); ?></span>
                 <a href="<?php the_permalink(); ?>" class="photo-link">
                     <i class="fa-regular fa-eye"></i>
                 </a>
 
                 <!-- Icône expand en haut à droite -->
-                <a href="#" class="photo-expand">
+                <a href="#"
+                   class="photo-expand"
+                   data-photo-id="<?php echo get_the_ID(); ?>">
                     <i class="fa-solid fa-expand mota-expand"></i>
                 </a>
             </div>

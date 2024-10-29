@@ -81,6 +81,12 @@ function nathaliemota_register_assets () {
     wp_enqueue_style('fontawesome-all');
     wp_register_script('nathaliemota-scripts', get_stylesheet_directory_uri() . '/scripts/scripts.js', ['jquery'], false, true);
     wp_enqueue_script('nathaliemota-scripts');
+    wp_register_script('lightbox-script', get_stylesheet_directory_uri() . '/scripts/lightbox.js', ['jquery'], false, true);
+    wp_enqueue_script('lightbox-script');
+    wp_localize_script('lightbox-script', 'lightbox_ajax_object', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'security' => wp_create_nonce('lightbox_nonce'),
+    ));
 
     // Script de la page d'accueil pour filtres et pagination
     if (is_front_page() || is_home()) {
@@ -295,6 +301,82 @@ function get_next_photo_ajax() {
     }
 }
 
+function get_photo_data() {
+    // Vérification de la requête AJAX
+    check_ajax_referer('lightbox_nonce', 'security');
+
+    $photo_id = isset($_POST['photo_id']) ? intval($_POST['photo_id']) : 0;
+
+    if ($photo_id) {
+        // Récupérer les données de la photo
+        $photo_url = wp_get_attachment_image_url(get_post_thumbnail_id($photo_id), 'photo-detail');
+        // Si aucune miniature, on récupère la première image jointe
+        if (!$photo_url) {
+            $attachments = get_attached_media('image', $photo_id);
+            if (!empty($attachments)) {
+                $first_attachment = reset($attachments); // Obtenir la première image jointe
+                $photo_url = wp_get_attachment_image_url($first_attachment->ID, 'photo-detail');
+            }
+        }
+        $photo_reference = get_field('reference_photo', $photo_id);
+        $photo_category_terms = wp_get_post_terms($photo_id, 'evenement');
+        $photo_category = (!empty($photo_category_terms) && !is_wp_error($photo_category_terms)) ? $photo_category_terms[0]->name : 'Non classé';
+
+        if ($photo_url) {
+            wp_send_json_success([
+                'url' => $photo_url,
+                'reference' => $photo_reference,
+                'category' => $photo_category
+            ]);
+        } else {
+            wp_send_json_error('Image non trouvée.');
+        }
+    } else {
+        wp_send_json_error('Photo non trouvée.');
+    }
+    wp_die();
+}
+
+function get_adjacent_photo_data() {
+    check_ajax_referer('lightbox_nonce', 'security');
+
+    $current_photo_id = isset($_POST['photo_id']) ? intval($_POST['photo_id']) : 0;
+
+    // Récupération des ID de la photo précédente et suivante
+    $previous_photo = get_previous_post(['post_type' => 'photographies']);
+    $next_photo = get_next_post(['post_type' => 'photographies']);
+
+    $response = [];
+
+    // Récupération des données pour la photo précédente
+    if ($previous_photo) {
+        $response['previous'] = [
+            'id' => $previous_photo->ID,
+            'url' => wp_get_attachment_image_url(get_post_thumbnail_id($previous_photo->ID), 'photo-detail') ?: '',
+            'reference' => get_field('reference_photo', $previous_photo->ID),
+            'category' => wp_get_post_terms($previous_photo->ID, 'evenement')[0]->name ?? 'Non classé'
+        ];
+    }
+
+    // Récupération des données pour la photo suivante
+    if ($next_photo) {
+        $response['next'] = [
+            'id' => $next_photo->ID,
+            'url' => wp_get_attachment_image_url(get_post_thumbnail_id($next_photo->ID), 'photo-detail') ?: '',
+            'reference' => get_field('reference_photo', $next_photo->ID),
+            'category' => wp_get_post_terms($next_photo->ID, 'evenement')[0]->name ?? 'Non classé'
+        ];
+    }
+
+    if ($response) {
+        wp_send_json_success($response);
+    } else {
+        wp_send_json_error('Aucune photo suivante ou précédente trouvée.');
+    }
+
+    wp_die();
+}
+
 add_action('init', 'nathaliemota_init');
 add_action ('after_setup_theme', 'nathaliemota_setup');
 add_action('wp_enqueue_scripts', 'nathaliemota_register_assets');
@@ -304,3 +386,7 @@ add_action( 'wp_ajax_get_next_photo', 'get_next_photo_ajax' );
 add_action( 'wp_ajax_nopriv_get_next_photo', 'get_next_photo_ajax' );
 add_action( 'wp_ajax_load_more_photos', 'load_more_photos' );
 add_action( 'wp_ajax_nopriv_load_more_photos', 'load_more_photos' );
+add_action('wp_ajax_get_photo_data', 'get_photo_data');
+add_action('wp_ajax_nopriv_get_photo_data', 'get_photo_data');
+add_action('wp_ajax_get_adjacent_photo_data' , 'get_adjacent_photo_data');
+add_action('wp_ajax_nopriv_get_adjacent_photo_data' , 'get_adjacent_photo_data');

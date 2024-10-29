@@ -7,6 +7,7 @@
     ?>
     <?php get_template_part( 'template-parts/contact-modal' ); ?>
     <?php get_template_part( 'template-parts/contact-modal-photo' ); ?>
+    <?php get_template_part( 'template-parts/lightbox' ); ?>
     <?php wp_footer(); ?>
 </footer>
 </body>
