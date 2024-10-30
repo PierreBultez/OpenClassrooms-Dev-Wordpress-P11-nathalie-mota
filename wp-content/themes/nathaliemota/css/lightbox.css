@@ -62,12 +62,13 @@
 }
 
 .lightbox-prev {
-    left: -50px;
+    left: -10px;
     z-index: 1;
 }
 
 .lightbox-next {
-    right: -50px;
+    right: -10px;
+    z-index: 1;
 }
 
 .lightbox-info {

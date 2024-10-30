@@ -65,6 +65,8 @@ function nathaliemota_setup () {
     ) );
     add_image_size( 'photo-detail', 844, 844 );
     add_image_size( 'photo-detail-thumb', 80, 80, true );
+    add_image_size( 'photo-lightbox-landscape', 844, 563, true );
+    add_image_size( 'photo-lightbox-portrait', 563, 844, true );
 }
 
 function nathaliemota_register_assets () {
@@ -369,13 +371,14 @@ function get_previous_lightbox_photo_ajax() {
     if ($previous_query->have_posts()) {
         $previous_query->the_post();
         $previous_post_id = get_the_ID();
-        $image_url = wp_get_attachment_image_url(get_post_thumbnail_id($previous_post_id), 'photo-detail');
+        // $image_url = wp_get_attachment_image_url(get_post_thumbnail_id($previous_post_id), 'photo-lightbox');
+        $image_url = get_lightbox_image_url(get_post_thumbnail_id($previous_post_id));
 
         if (!$image_url) {
             $attachments = get_attached_media('image', $previous_post_id);
             if (!empty($attachments)) {
                 $attachment = reset($attachments);
-                $image_url = wp_get_attachment_image_url($attachment->ID, 'photo-detail');
+                $image_url = get_lightbox_image_url($attachment->ID);
             }
         }
 
@@ -424,13 +427,14 @@ function get_next_lightbox_photo_ajax() {
     if ($next_query->have_posts()) {
         $next_query->the_post();
         $next_post_id = get_the_ID();
-        $image_url = wp_get_attachment_image_url(get_post_thumbnail_id($next_post_id), 'photo-detail');
+        // $image_url = wp_get_attachment_image_url(get_post_thumbnail_id($next_post_id), 'photo-lightbox');
+        $image_url = get_lightbox_image_url(get_post_thumbnail_id($next_post_id));
 
         if (!$image_url) {
             $attachments = get_attached_media('image', $next_post_id);
             if (!empty($attachments)) {
                 $attachment = reset($attachments);
-                $image_url = wp_get_attachment_image_url($attachment->ID, 'photo-detail');
+                $image_url = get_lightbox_image_url($attachment->ID);
             }
         }
 
@@ -447,6 +451,28 @@ function get_next_lightbox_photo_ajax() {
 
     wp_reset_postdata();
     wp_die();
+}
+
+function get_lightbox_image_url($attachment_id) {
+    if (!$attachment_id) {
+        return false;
+    }
+
+    // Récupérer les informations de l'image pour vérifier l'orientation
+    $image_data = wp_get_attachment_metadata($attachment_id);
+    if (!$image_data) {
+        return false;
+    }
+
+    // Calculer l'orientation
+    $orientation = ($image_data['width'] > $image_data['height']) ? 'landscape' : 'portrait';
+
+    // Retourner l'URL de l'image en fonction de l'orientation
+    if ($orientation === 'landscape') {
+        return wp_get_attachment_image_url($attachment_id, 'photo-lightbox-landscape');
+    } else {
+        return wp_get_attachment_image_url($attachment_id, 'photo-lightbox-portrait');
+    }
 }
 
 /* function get_adjacent_photo_data() {

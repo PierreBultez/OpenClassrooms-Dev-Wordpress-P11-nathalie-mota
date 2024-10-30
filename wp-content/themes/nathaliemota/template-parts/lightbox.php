@@ -6,7 +6,7 @@
         </button>
 
         <button class="lightbox-prev" id="prevArrowLightbox">
-            <i class="fa-solid fa-arrow-left-long"></i><span class="description-photo">Précédente</span>
+            <i class="fa-solid fa-arrow-left-long"></i><span class="description-photo">   Précédente</span>
         </button>
 
         <div class="lightbox-image-container">
@@ -14,7 +14,7 @@
         </div>
 
         <button class="lightbox-next" id="nextArrowLightbox">
-            <span class="description-photo">Suivante</span><i class="fa-solid fa-arrow-right-long"></i>
+            <span class="description-photo">Suivante   </span><i class="fa-solid fa-arrow-right-long"></i>
         </button>
 
         <div class="lightbox-info">
