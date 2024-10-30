@@ -1,0 +1,430 @@
+/* Smartphones en portrait (max-width 576px) */
+@media (max-width: 576px) {
+    body {
+        max-width: 576px;
+    }
+
+    h1 {
+        font-size: 2.875rem;
+    }
+
+    h2 {
+        font-size: 2.875rem;
+        line-height: 3rem;
+    }
+
+    .description-photo {
+        font-size: 1.25rem;
+    }
+
+    header {
+        background-color: var(--full-white);
+        position: relative;
+        z-index: 10;
+    }
+
+    .logo {
+        padding-left: 40px;
+    }
+
+    .logo img {
+        width: 140px;
+    }
+
+    .burger-menu {
+        display: block;
+        padding-right: 40px;
+    }
+
+    .menu {
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background-color: var(--full-red);
+        width: 100%;
+        height: calc(100vh - 80px);
+        padding-right: 0;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.7s linear, opacity 0.7s linear, visibility 0s 0.5s;
+    }
+
+    .menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transition: transform 0.7s linear, opacity 0.7s linear;
+    }
+
+    .menu-entry {
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        gap: 40px;
+    }
+
+    .menu-entry li {
+        padding: 15px 0;
+    }
+
+    .menu-entry li a {
+        color: var(--full-white);
+        font-size: 2.75rem;
+    }
+
+    form input, form textarea {
+        border-radius: 2px;
+    }
+
+    .hero-title {
+        -webkit-text-stroke: 0.8px var(--full-white);
+    }
+
+    footer {
+        height: 210px;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 24px;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #dropdown-right {
+        margin-left: unset;
+    }
+
+    .reset-button {
+        justify-content: center;
+    }
+
+    .btn-filter {
+        width: 25rem;
+        padding: 15px 20px;
+        font-size: 1.25rem;
+    }
+
+    .dropdown-content {
+        width: 25rem;
+        font-size: 1.25rem;
+    }
+
+    .image-bloc {
+        grid-template-columns: 1fr;
+        padding: 0 0 30px 0;
+        max-width: 28.125rem;
+    }
+
+    .image-bloc-btn button {
+        width: 25rem;
+        padding: 20px 0 20px 0;
+        font-size: 1.25rem;
+    }
+
+    .lightbox-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        grid-template-areas: "header-left close" "image image" "info info" "arrow-left arrow-right";
+        justify-items: center;
+    }
+
+    .lightbox-close {
+        grid-area: close;
+        position: unset;
+        margin-left: auto;
+    }
+
+    .lightbox-prev {
+        grid-area: arrow-left;
+        position: unset;
+        margin-right: auto;
+        margin-top: 50px;
+    }
+
+    .lightbox-image-container {
+        grid-area: image;
+    }
+
+    .lightbox-next {
+        grid-area: arrow-right;
+        position: unset;
+        margin-left: auto;
+        margin-top: 50px;
+    }
+
+    .lightbox-info {
+        grid-area: info;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .detail-photo {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+
+    .detail-photo-col-1, .detail-photo-col-2 {
+        width: 70%;
+    }
+
+    .detail-photo-col-1 {
+        order: 1;
+        margin-top: 30px;
+        border-bottom: none;
+    }
+
+    .detail-photo-col-2 {
+        order: 0;
+    }
+
+    .detail-photo-bottom {
+        width: 100%;
+        padding: 0;
+        border-top: 1px solid var(--full-black);
+    }
+
+    .divider {
+        justify-content: center;
+        padding: 30px 0;
+    }
+
+    .detail-photo-bottom-contact {
+        width: 70%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .detail-photo-bottom-contact button {
+        width: 100%;
+    }
+
+    .detail-photo-bottom-contact p {
+        font-size: 1.25rem;
+    }
+
+    .detail-photo-bottom-next-prev {
+        display: none;
+    }
+
+    .cross-sell h3 {
+        font-size: 1.375rem;
+    }
+
+    #post-16 > div > div.wp-block-columns.alignfull.is-layout-flex.wp-container-core-columns-is-layout-1.wp-block-columns-is-layout-flex > div:nth-child(1) {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* Smartphones en paysage et petites tablettes (min-width 577px et max-width 768px) */
+@media (min-width: 577px) and (max-width: 768px) {
+    body {
+        max-width: 768px;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+    }
+
+    h2 {
+        font-size: 2.875rem;
+        line-height: 3rem;
+    }
+
+    header {
+        background-color: var(--full-white);
+        position: relative;
+        z-index: 10;
+    }
+
+    .logo {
+        padding-left: 40px;
+    }
+
+    .logo img {
+        width: 160px;
+    }
+
+    .burger-menu {
+        display: block;
+    }
+
+    .menu {
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background-color: var(--full-red);
+        width: 100%;
+        height: calc(100vh - 80px);
+        padding-right: 0;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.7s linear, opacity 0.7s linear, visibility 0s 0.5s;
+    }
+
+    .menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transition: transform 0.7s linear, opacity 0.7s linear;
+    }
+
+    .menu-entry {
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        gap: 40px;
+    }
+
+    .menu-entry li {
+        padding: 15px 0;
+    }
+
+    .menu-entry li a {
+        color: var(--full-white);
+        font-size: 2.75rem;
+    }
+
+    .contact {
+        margin-bottom: 10px;
+    }
+
+    .form-container {
+        width: 80%;
+    }
+
+    .column-container {
+        display: flex;
+        flex-direction: row;
+        gap: 20px; /* Espace entre les colonnes */
+    }
+
+    .col-1, .col-2 {
+        width: 48%;
+    }
+
+    form label {
+        margin-bottom: 4px;
+    }
+
+    form input, form textarea {
+        margin-bottom: 5px;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .btn-submit {
+        padding: 7px;
+    }
+
+    .hero-title {
+        -webkit-text-stroke: 1.2px var(--full-white);
+    }
+
+    footer {
+        height: 210px;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 24px;
+    }
+}
+
+/* Tablettes et petits ordinateurs (min-width 769px et max-width 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+    body {
+        max-width: 992px;
+    }
+
+    h1 {
+        font-size: 4.5rem;
+    }
+
+    h2 {
+        font-size: 2.875rem;
+        line-height: 3rem;
+    }
+
+    .logo {
+        padding-left: 80px;
+    }
+
+    .logo img {
+        width: 200px;
+    }
+
+    .menu {
+        padding-right: 80px;
+    }
+
+    .contact {
+        margin-bottom: 20px;
+    }
+
+    form label {
+        margin-bottom: 4px;
+    }
+
+    form input, form textarea {
+        margin-bottom: 5px;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .btn-submit {
+        padding: 7px;
+    }
+
+    .hero-title {
+        -webkit-text-stroke: 2.2px var(--full-white);
+    }
+}
+
+/* Ordinateurs portables (min-width 993px et max-width 1200px) */
+@media (min-width: 993px) and (max-width: 1200px) {
+    body {
+        max-width: 1200px;
+    }
+
+    h1 {
+        font-size: 5.5rem;
+    }
+
+    h2 {
+        font-size: 2.875rem;
+        line-height: 3rem;
+    }
+
+    .contact {
+        margin-bottom: 36px;
+    }
+
+    form label {
+        margin-bottom: 6px;
+    }
+
+    form input, form textarea {
+        margin-bottom: 10px;
+        border-radius: 6px;
+    }
+
+    .hero-title {
+        -webkit-text-stroke: 2.6px var(--full-white);
+    }
+}

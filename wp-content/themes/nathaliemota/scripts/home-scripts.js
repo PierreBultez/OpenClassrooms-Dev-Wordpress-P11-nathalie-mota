@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (response.success) {
                         $('.image-bloc').append(response.data.content);
                         paged++; // Incrémenter la page pour les chargements suivants
-                        $('#loadMoreBtn').text('Afficher plus').prop('disabled', !response.data.has_more);
+                        $('#loadMoreBtn').text('Charger plus').prop('disabled', !response.data.has_more);
                     } else {
                         $('#loadMoreBtn').text('Aucune photo supplémentaire').prop('disabled', true);
                         console.log('Erreur de réponse: ', response.data);

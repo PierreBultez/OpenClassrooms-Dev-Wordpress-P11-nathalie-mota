@@ -66,7 +66,7 @@ function nathaliemota_setup () {
     add_image_size( 'photo-detail', 844, 844 );
     add_image_size( 'photo-detail-thumb', 80, 80, true );
     add_image_size( 'photo-lightbox-landscape', 844, 563, true );
-    add_image_size( 'photo-lightbox-portrait', 563, 844, true );
+    add_image_size( 'photo-lightbox-portrait', 376, 563, true );
 }
 
 function nathaliemota_register_assets () {
@@ -77,6 +77,10 @@ function nathaliemota_register_assets () {
     wp_enqueue_script('bootstrap');
     wp_register_style('nathaliemota', get_stylesheet_directory_uri() . '/style.css');
     wp_enqueue_style('nathaliemota');
+    wp_register_style('nathaliemota-lightbox', get_stylesheet_directory_uri() . '/css/lightbox.css');
+    wp_enqueue_style('nathaliemota-lightbox');
+    wp_register_style('nathaliemota-mediaQueries', get_stylesheet_directory_uri() . '/css/mediaQueries.css');
+    wp_enqueue_style('nathaliemota-mediaQueries');
     wp_register_style('fontawesome', get_stylesheet_directory_uri() . '/assets/fontawesome/css/fontawesome.css');
     wp_register_style('fontawesome-all', get_stylesheet_directory_uri() . '/assets/fontawesome/css/all.css');
     wp_enqueue_style('fontawesome');

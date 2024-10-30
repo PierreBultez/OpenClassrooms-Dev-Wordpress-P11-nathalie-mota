@@ -74,5 +74,5 @@
     ?>
 </div>
 <div class="image-bloc-btn">
-    <button type="button" id="loadMoreBtn" class="btn-submit">Charger plus</button>
+    <button type="button" id="loadMoreBtn" class="btn-submit description-photo">Charger plus</button>
 </div>
