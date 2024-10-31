@@ -64,6 +64,7 @@ function nathaliemota_setup () {
     add_image_size('photo-detail-thumb', 80, 80, true);
     add_image_size('photo-lightbox-landscape', 844, 563, true);
     add_image_size('photo-lightbox-portrait', 376, 563, true);
+    add_image_size('hero', 1440, 960, true);
 }
 
 /* Fonction pour enregistrer et inclure les styles et scripts */
@@ -127,6 +128,45 @@ function nathaliemota_register_assets() {
             'security' => wp_create_nonce('photo_navigation_nonce'),
         ]);
     }
+}
+
+/* Fonction pour récupérer une image aléatoire pour le héros */
+function get_random_hero_image() {
+    // Requête pour récupérer les posts de type "photographies"
+    $args = array(
+        'post_type'      => 'photographies',
+        'posts_per_page' => -1, // Récupérer tous les posts
+        'post_status'    => 'publish',
+    );
+
+    $photo_query = new WP_Query($args);
+
+    if ($photo_query->have_posts()) {
+        $photos = array();
+
+        // Parcourir les posts pour récupérer les images attachées
+        while ($photo_query->have_posts()) {
+            $photo_query->the_post();
+            $attachments = get_attached_media('image', get_the_ID());
+
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    $photos[] = $attachment->ID;
+                }
+            }
+        }
+
+        // Réinitialiser les données de la requête principale
+        wp_reset_postdata();
+
+        // Sélectionner une image aléatoire
+        if (!empty($photos)) {
+            $random_attachment_id = $photos[array_rand($photos)];
+            return wp_get_attachment_image_src($random_attachment_id, 'hero')[0];
+        }
+    }
+
+    return false;
 }
 
 /* Fonction pour charger plus de photographies */
