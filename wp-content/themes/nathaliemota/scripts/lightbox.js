@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Ouvre la lightbox lorsque l'utilisateur clique sur une photo
+        // Ouvre la lightbox lorsque l'utilisateur clique sur l'icone expand
         $('.photo-expand').on('click', function (e) {
             e.preventDefault();
             const photoId = $(this).data('photo-id'); // Récupère l'ID de la photo cliquée

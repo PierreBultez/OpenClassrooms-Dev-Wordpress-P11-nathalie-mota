@@ -109,6 +109,8 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedCategory = $(this).data('term-id');
             loadPhotos(true); // Recharger avec le nouveau filtre
             setButtonText($('#categoryFilterBtn'), $(this).text());
+            $('.category-option').removeClass('selected'); // Retirer la classe selected des autres options
+            $(this).addClass('selected'); // Ajouter la classe selected à l'option sélectionnée
         });
 
         // Gestion des filtres : formats
@@ -117,6 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedFormat = $(this).data('term-id');
             loadPhotos(true); // Recharger avec le nouveau filtre
             setButtonText($('#formatFilterBtn'), $(this).text());
+            $('.format-option').removeClass('selected'); // Retirer la classe selected des autres options
+            $(this).addClass('selected'); // Ajouter la classe selected à l'option sélectionnée
         });
 
         // Gestion des filtres : tri
@@ -125,6 +129,8 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedSort = $(this).data('order'); // Assurez-vous que le tri est mis à jour
             loadPhotos(true); // Recharger avec le tri sélectionné
             setButtonText($('#sortFilterBtn'), $(this).text());
+            $('.sort-option').removeClass('selected'); // Retirer la classe selected des autres options
+            $(this).addClass('selected'); // Ajouter la classe selected à l'option sélectionnée
         });
 
         // Bouton "Charger plus" pour pagination
@@ -142,6 +148,9 @@ document.addEventListener('DOMContentLoaded', function () {
             setButtonText($('#categoryFilterBtn'), 'Catégorie');
             setButtonText($('#formatFilterBtn'), 'Format');
             setButtonText($('#sortFilterBtn'), 'Trier par');
+            $('.category-option').removeClass('selected'); // Retirer la classe selected des autres options
+            $('.format-option').removeClass('selected'); // Retirer la classe selected des autres options
+            $('.sort-option').removeClass('selected'); // Retirer la classe selected des autres options
             loadPhotos(true); // Recharger sans filtre
         });
 

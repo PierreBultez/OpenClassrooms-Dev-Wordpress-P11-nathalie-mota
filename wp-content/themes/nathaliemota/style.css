@@ -366,6 +366,10 @@ form input[type="text"], form input[type="email"], form textarea {
     border: 1px solid var(--light-red);
 }
 
+.btn-reset:active {
+    background-color: var(--medium-red);
+}
+
 .dropdown-content {
     display: none;
     position: absolute;
@@ -381,8 +385,10 @@ form input[type="text"], form input[type="email"], form textarea {
     margin-bottom: 0;
     border: 1px solid var(--medium-grey);
     border-top: none;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
+}
+
+.dropdown-content.active {
+    display: block;
 }
 
 .dropdown-content a {
@@ -392,12 +398,17 @@ form input[type="text"], form input[type="email"], form textarea {
     display: block;
 }
 
-.dropdown-content.active {
-    display: block;
-}
-
 .dropdown-content a:hover {
     background-color: var(--light-red);
+}
+
+.dropdown-content a:active {
+    background-color: var(--medium-red);
+}
+
+.dropdown-content a.selected {
+    background-color: var(--full-red);
+    color: var(--full-white);
 }
 
 .btn-filter.active {
