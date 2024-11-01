@@ -59,6 +59,14 @@ function nathaliemota_setup () {
         'footer_menu' => __('Menu de footer', ''),
     ));
 
+    // Activer le support du logo personnalisé
+    add_theme_support('custom-logo', array(
+        'height'      => 22,
+        'width'       => 345,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ));
+
     // Ajoute des tailles d'image personnalisées
     add_image_size('photo-detail', 844, 844);
     add_image_size('photo-detail-thumb', 80, 80, true);
@@ -127,6 +135,69 @@ function nathaliemota_register_assets() {
             'post_id' => get_the_ID(),
             'security' => wp_create_nonce('photo_navigation_nonce'),
         ]);
+    }
+}
+
+/* Fonction pour ajouter un champ meta description dans l'éditeur WP */
+function custom_meta_description_box()
+{
+    add_meta_box(
+        'meta_description_id',
+        'Meta Description',
+        'custom_meta_description_callback',
+        'post',
+        'side'
+    );
+    add_meta_box(
+        'meta_description_id',
+        'Meta Description',
+        'custom_meta_description_callback',
+        'page',
+        'side'
+    );
+    add_meta_box(
+        'meta_description_id',
+        'Meta Description',
+        'custom_meta_description_callback',
+        'photographies',
+        'side'
+    );
+}
+
+function custom_meta_description_callback($post)
+{
+    $value = get_post_meta($post->ID, '_custom_meta_description', true);
+    echo '<textarea style="width:100%;" rows="4" name="custom_meta_description">' . esc_attr($value) . '</textarea>';
+}
+
+function save_custom_meta_description($post_id)
+{
+    if (array_key_exists('custom_meta_description', $_POST)) {
+        update_post_meta(
+            $post_id,
+            '_custom_meta_description',
+            sanitize_textarea_field($_POST['custom_meta_description'])
+        );
+    }
+}
+
+/* Fonction pour afficher une meta description dynamique */
+function get_dynamic_meta_description()
+{
+    if (is_single() || is_page()) {
+        global $post;
+        $custom_meta_description = get_post_meta($post->ID, '_custom_meta_description', true);
+        if ($custom_meta_description) {
+            return esc_attr($custom_meta_description);
+        } else {
+            // Fallback to excerpt if no custom meta description is set
+            return esc_attr(wp_trim_words($post->post_content, 30, '...'));
+        }
+    } elseif (is_category()) {
+        $category_description = category_description();
+        return esc_attr($category_description);
+    } else {
+        return "Nathalie Mota photographe freelance professionnelle spécialisée dans l'événementiel.";
     }
 }
 
@@ -549,3 +620,6 @@ add_action('wp_ajax_nopriv_get_previous_lightbox_photo_ajax', 'get_previous_ligh
 // Actions AJAX pour récupérer la photo suivante dans la lightbox
 add_action('wp_ajax_get_next_lightbox_photo_ajax', 'get_next_lightbox_photo_ajax');
 add_action('wp_ajax_nopriv_get_next_lightbox_photo_ajax', 'get_next_lightbox_photo_ajax');
+
+add_action('add_meta_boxes', 'custom_meta_description_box');
+add_action('save_post', 'save_custom_meta_description');
